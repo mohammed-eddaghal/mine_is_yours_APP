@@ -14,16 +14,13 @@
         android:id="@+id/logo"
         android:layout_width="155dp"
         android:layout_height="178dp"
-        android:layout_marginStart="8.0dip"
-        android:layout_marginEnd="8.0dip"
         android:contentDescription="@string/Logo"
         android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.279"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.078" />
+        app:layout_constraintVertical_bias="0.077" />
 
     <TextView
         android:id="@+id/textView"
@@ -34,8 +31,10 @@
         android:text="Mine Is Yours"
         android:textSize="90px"
         android:typeface="sans"
-        tools:layout_editor_absoluteX="75dp"
-        tools:layout_editor_absoluteY="235dp" />
+        app:layout_constraintBottom_toTopOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInLayoutUsername" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtInLayoutUsername"
@@ -71,7 +70,7 @@
 
     <CheckBox
         android:id="@+id/rememberMe"
-        android:layout_width="402dp"
+        android:layout_width="350dp"
         android:layout_height="58dp"
         android:text="@string/RememberMe"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,7 +116,7 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password"
-        android:layout_width="430dp"
+        android:layout_width="350dp"
         android:layout_height="59dp"
         android:layout_marginTop="56dp"
         android:drawableLeft="@drawable/lock"
@@ -129,7 +128,7 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/username"
-        android:layout_width="411dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="312dp"
         android:drawableLeft="@drawable/avatar"
