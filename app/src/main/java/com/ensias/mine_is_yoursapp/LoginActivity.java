@@ -56,8 +56,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     Snackbar snackbar = Snackbar.make(view, "Please fill out these fields",
                             Snackbar.LENGTH_LONG);
-                    View snackbarView = snackbar.getView();
-                    snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+                    View view1 = snackbar.getView();
+                    view1.setBackgroundColor(getResources().getColor(R.color.red));
                     snackbar.show();
                     txtInLayoutUsername.setError("Username should not be empty");
                 } else {
@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (password.getText().toString().trim().isEmpty()) {
                     Snackbar snackbar = Snackbar.make(view, "Please fill out these fields",
                             Snackbar.LENGTH_LONG);
-                    View snackbarView = snackbar.getView();
-                    snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+                    View view1 = snackbar.getView();
+                    view1.setBackgroundColor(getResources().getColor(R.color.red));
                     snackbar.show();
                     txtInLayoutPassword.setError("Password should not be empty");
                 } else {
