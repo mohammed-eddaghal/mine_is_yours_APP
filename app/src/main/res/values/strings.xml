@@ -13,4 +13,11 @@
     <string name="ConfirmEmailAddress">Confirmez votre adress email</string>
     <string name="SignUp">Sign Up</string>
     <string name="registrationPage">Creer un nouveau Compte</string>
+
+    <!-- BOTTOM NAVIGATION VIEW -->
+    <string name="bottom_messagerie">Messagerie</string>
+    <string name="bottom_acceuil">Acceuil</string>
+    <string name="bottom_autre">Autre</string>
+
+
 </resources>

@@ -12,4 +12,10 @@
     <color name="colorAccent">#FF4081</color>
     <color name="yellow">#fff5f504</color>
     <color name="red">#B71C1C</color>
+
+
+
+    <color name="background_light">#fafafa</color>
+    <color name="colorAccentDark">#4aa87a</color>
+
 </resources>
