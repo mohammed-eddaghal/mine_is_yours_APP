@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "689122431708",
+    "project_id": "mineisyours-68d08",
+    "storage_bucket": "mineisyours-68d08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689122431708:android:b3a478a401e77fecfe1a19",
+        "android_client_info": {
+          "package_name": "com.ensias.mine_is_yoursapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689122431708-5jfjvbsmg7lnj4dsu2qfp5auusf0p7j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr7zgWrVffmOb9eyryXOVjnel6uFFF0AU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689122431708-5jfjvbsmg7lnj4dsu2qfp5auusf0p7j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
