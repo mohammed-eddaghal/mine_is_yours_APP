@@ -1,27 +1,35 @@
 package com.ensias.mine_is_yoursapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password, reg_username, reg_password,reg_firstName, reg_lastName, reg_email, reg_confirmemail;
     Button login, signUp, reg_register;
     TextInputLayout txtInLayoutUsername, txtInLayoutPassword, txtInLayoutRegPassword;
     CheckBox rememberMe;
+    FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        mAuth = FirebaseAuth.getInstance();
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
@@ -41,8 +49,6 @@ public class LoginActivity extends AppCompatActivity {
                 ClickSignUp();
             }
         });
-
-
     }
 
     //This is method for doing operation of check login
@@ -79,6 +85,18 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     //box is not checked ?
                 }
+
+                mAuth.signInWithEmailAndPassword(username.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, "Welcome!",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                    }else{
+                        Toast.makeText(LoginActivity.this,"Something went wrong !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
+                    }
+                    }
+                });
 
             }
 
@@ -144,13 +162,23 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     //Here you can write the codes for checking confirmemail
                 }
+
+                mAuth.createUserWithEmailAndPassword(reg_email.getText().toString().trim(),reg_password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        }else{
+                            Toast.makeText(LoginActivity.this,"User was not created !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 
-
         dialog.show();
-
-
+        //startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
     }
 
 }
