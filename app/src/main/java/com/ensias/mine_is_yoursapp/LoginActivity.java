@@ -13,12 +13,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password, reg_username, reg_password,reg_firstName, reg_lastName, reg_email, reg_confirmemail;
@@ -26,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout txtInLayoutUsername, txtInLayoutPassword, txtInLayoutRegPassword;
     CheckBox rememberMe;
     FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -167,7 +172,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
+                            DatabaseReference myRef = database.getReference();
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
+                            User user = new User("2",2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
+                            myRef.push().setValue(user);
                             startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
                         }else{
                             Toast.makeText(LoginActivity.this,"User was not created !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
