@@ -17,7 +17,10 @@
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_messagerie">Messagerie</string>
     <string name="bottom_acceuil">Acceuil</string>
-    <string name="bottom_autre">Autre</string>
+    <string name="bottom_autre">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Fragment Boite messagerie</string>
+    <string name="profile_test">Profile Fragment</string>
 
 
 </resources>
