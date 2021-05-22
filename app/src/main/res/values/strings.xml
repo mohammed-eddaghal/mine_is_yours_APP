@@ -14,6 +14,19 @@
     <string name="SignUp">Sign Up</string>
     <string name="registrationPage">Creer un nouveau Compte</string>
 
+    <string name="nom_complet">Nom user</string>
+    <string name="username_title">Username</string>
+    <string name="back_to_home">Back to\nHome</string>
+    <string name="phone_title">Phone</string>
+    <string name="phone">+000 00 000 000</string>
+    <string name="email_title">Email</string>
+    <string name="address_title">Address</string>
+    <string name="address">Rabat</string>
+    <string name="Edit">Edit</string>
+    <string name="Modifier">Modifier</string>
+    <string name="Annuler">Annuler</string>
+
+
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_messagerie">Messagerie</string>
     <string name="bottom_acceuil">Acceuil</string>
@@ -21,6 +34,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Fragment Boite messagerie</string>
     <string name="profile_test">Profile Fragment</string>
+    <string name="title_activity_edit_profile">Edit_profile</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 
 </resources>
