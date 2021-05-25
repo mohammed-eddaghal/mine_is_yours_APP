@@ -53,7 +53,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
         // firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
         DatabaseReference myRef = database.getReference();
-        //User user = new User("2",2d,2d,"name2","last","mail@gmail.com","default");
+        User user = new User("2",2d,2d,"name2","last","mail@gmail.com","default");
         //myRef.push().setValue(user);
 
         bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
