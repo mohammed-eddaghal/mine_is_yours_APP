@@ -13,6 +13,12 @@
     <color name="yellow">#fff5f504</color>
     <color name="red">#B71C1C</color>
 
+    <color name="colorPrimary1">#FF9301</color>
+    <color name="colorPrimaryDark1">#FF3E2D</color>
+    <color name="colorSecondary1">#E75370</color>
+    <color name="colorSecondaryDark1">#C35CEF</color>
+
+
 
 
     <color name="background_light">#fafafa</color>
