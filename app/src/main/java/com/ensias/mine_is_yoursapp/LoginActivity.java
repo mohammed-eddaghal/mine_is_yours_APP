@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ensias.mine_is_yoursapp.model.SessionManager;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password, reg_username, reg_password,reg_firstName, reg_lastName, reg_email, reg_confirmemail;
@@ -43,6 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         txtInLayoutPassword = findViewById(R.id.txtInLayoutPassword);
         rememberMe = findViewById(R.id.rememberMe);
 
+        SessionManager sessionManager = new SessionManager(LoginActivity.this,SessionManager.SESSION_REMEMBERME);
+        if(sessionManager.checkRememberMe()){
+            HashMap<String,String> userLogin = sessionManager.getRememberMeSessionDetails();
+            username.setText(userLogin.get(SessionManager.KEY_SESSION_EMAIL));
+            password.setText(userLogin.get(SessionManager.KEY_SESSION_PASSWORD));
+        }
+
 
         ClickLogin();
 
@@ -55,6 +66,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    //SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+    //String rememberBox = "Hello";//preferences.getString("remember","");
+    //boolean isTrue = rememberBox.equals("true");
+    //Intent intent = new Intent(LoginActivity.this,MenuPrincipaleActivity.class);
+    //startActivity(intent);
 
     //This is method for doing operation of check login
     private void ClickLogin() {
@@ -86,11 +102,23 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (rememberMe.isChecked()) {
-                    //box is checked ?
-                } else {
-                    //box is not checked ?
+                    SessionManager sessionManager = new SessionManager(LoginActivity.this, SessionManager.SESSION_REMEMBERME);
+                    sessionManager.createRememberMeSession(username.getText().toString().trim(), password.getText().toString().trim());
                 }
-
+/*
+                    SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","true");
+                    editor.apply();
+                    Toast.makeText(LoginActivity.this,"Checked",Toast.LENGTH_SHORT).show();
+                } else {
+                    SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","false");
+                    editor.apply();
+                    Toast.makeText(LoginActivity.this,"Unchecked",Toast.LENGTH_SHORT).show();
+                }
+*/
                 mAuth.signInWithEmailAndPassword(username.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
