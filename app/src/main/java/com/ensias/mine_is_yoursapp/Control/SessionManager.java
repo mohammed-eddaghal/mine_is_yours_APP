@@ -1,7 +1,9 @@
-package com.ensias.mine_is_yoursapp.model;
+package com.ensias.mine_is_yoursapp.Control;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.ensias.mine_is_yoursapp.model.User;
 
 import java.util.HashMap;
 
