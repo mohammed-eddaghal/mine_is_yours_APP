@@ -37,7 +37,7 @@ public class ProfileFragment extends Fragment {
 
     private DatabaseReference mDatabase;
 
-    TextView username_profile, phone_profile, email_profile, add_profile;
+    TextView nom_user, username_profile, phone_profile, email_profile, add_profile;
     FrameLayout back ;
     Button edit_profile ;
     FirebaseUser user;
@@ -54,6 +54,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        nom_user = view.findViewById(R.id.nom_user);
         username_profile = view.findViewById(R.id.username_profile);
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
@@ -77,6 +78,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myUser = dataSnapshot.getValue(User.class) ;
+
+                //nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
                 username_profile.setText(myUser.getFirstName()+" " + myUser.getLastName());
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());

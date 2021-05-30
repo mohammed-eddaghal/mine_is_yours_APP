@@ -1,6 +1,7 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,21 +10,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class UpdateProfileFragment extends Fragment {
 
     int PICK_IMAGE_MULTIPLE = 1;
+
+    // 1 - Uri of image selected by user
+    private Uri uriImageSelected;
+
+    // 2 - STATIC DATA FOR PICTURE
+    private static final int RC_CHOOSE_PHOTO = 200;
+
     private DatabaseReference mDatabase;
 
-    TextView firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
-    Button annule_profile, update_profile , photo;
+    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
+    TextView nom_user ;
+    Button annule_profile, update_profile ;
+    FloatingActionButton photo;
+
     User user ;
 
     public UpdateProfileFragment(User user) {
@@ -41,6 +54,8 @@ public class UpdateProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_profile, container, false);
 
+        nom_user = view.findViewById(R.id.nom_user);
+
         firstname_profile = view.findViewById(R.id.firstname_profile);
         lastname_profile = view.findViewById(R.id.lastname_profile);
         phone_profile = view.findViewById(R.id.phone_profile);
@@ -50,6 +65,8 @@ public class UpdateProfileFragment extends Fragment {
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
         photo = view.findViewById(R.id.photo);
+
+        nom_user.setText(user.getFirstName());
 
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
@@ -127,4 +144,5 @@ public class UpdateProfileFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_MULTIPLE);
     }
+
 }
