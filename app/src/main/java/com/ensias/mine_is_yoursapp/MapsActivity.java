@@ -1,15 +1,29 @@
 package com.ensias.mine_is_yoursapp;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,11 +32,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     String searchQuery;
 
+    FusedLocationProviderClient fusedLocationProviderClient;
 
 
     // creating a variable for our
@@ -66,13 +84,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String key;
     private MarkerOptions mapMarker;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         user = new User();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
+        getCurrentLocation();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -302,4 +323,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }*/
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        //initialize LocationManger
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //check condition
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            //when location service is enabled
+            //get Location
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    //initialize Location
+                    Location location = task.getResult();
+                    //check condition
+                    if (location != null){
+
+                    }else{
+                        //when location result is null
+                        //initialization location request
+
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(1000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+
+                        //initilize Location call back
+                        LocationCallback locationCallback = new LocationCallback(){
+                            @Override
+                            public void onLocationResult(LocationResult locationResult) {
+                                //Inisilize location
+                                Location location1 = locationResult.getLastLocation();
+
+                            }
+                        };
+
+                        //request location update
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+                    }
+                }
+            });
+        }else {
+            //when location service is not innabled
+            //open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        }
+
+    }
+
 }
