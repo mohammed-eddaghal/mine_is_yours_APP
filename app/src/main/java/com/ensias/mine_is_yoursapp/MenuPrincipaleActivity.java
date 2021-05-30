@@ -22,7 +22,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     private BoiteMessagerieFragment boiteMessagerieFragment;
-    private AjouterOutilFragment profileFragment;
+    private ProfileFragment profileFragment;
     private AjouterOutilFragment ajouterOutilFragment;
     BottomNavigationView bottomNavigationView;
 
@@ -30,11 +30,11 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
         return boiteMessagerieFragment;
     }
 
-    public AjouterOutilFragment getProfileFragment() {
+    public ProfileFragment getProfileFragment() {
         return profileFragment;
     }
 
-    public void setProfileFragment(AjouterOutilFragment profileFragment) {
+    public void setProfileFragment(ProfileFragment profileFragment) {
         this.profileFragment = profileFragment;
     }
 
@@ -66,7 +66,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principale);
         boiteMessagerieFragment = new BoiteMessagerieFragment();
-        profileFragment  = new AjouterOutilFragment();
+        profileFragment  = new ProfileFragment();
         ajouterOutilFragment = new AjouterOutilFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, profileFragment).commit();

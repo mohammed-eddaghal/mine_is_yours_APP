@@ -44,6 +44,18 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="ajouter_outil">Ajout Outil</string>
+    <string-array name="categorie_outil">
+        <item>Autres</item>
+        <item>Outils Cuisine</item>
+        <item>Outils Garage</item>
+        <item>Outils InformatiqueS</item>
+        <item>Meubles</item>
+        <item>Divertissement</item>
+
+    </string-array>
+
+
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
     <string name="change_email">Changer ton email</string>
@@ -64,6 +76,4 @@
     <string name="btn_sign_out">Se déconnecter</string>
     <string name="lbl_forgot_password">Mot de passe oublié?</string>
     <string name="forgot_password_msg">Nous avons juste besoin de votre adresse e-mail enregistrée pour vous envoyer des instructions de réinitialisation de mot de passe.</string>
-
-
 </resources>
