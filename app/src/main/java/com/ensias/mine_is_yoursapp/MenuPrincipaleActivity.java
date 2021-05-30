@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ensias.mine_is_yoursapp.fragments.AjouterOutilFragment;
 import com.ensias.mine_is_yoursapp.fragments.BoiteMessagerieFragment;
 import com.ensias.mine_is_yoursapp.fragments.EditFragment;
 import com.ensias.mine_is_yoursapp.fragments.ProfileFragment;
@@ -21,12 +22,20 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     private BoiteMessagerieFragment boiteMessagerieFragment;
-    private ProfileFragment profileFragment;
-    private EditFragment editFragment;
+    private AjouterOutilFragment profileFragment;
+    private AjouterOutilFragment ajouterOutilFragment;
     BottomNavigationView bottomNavigationView;
 
     public BoiteMessagerieFragment getBoiteMessagerieFragment() {
         return boiteMessagerieFragment;
+    }
+
+    public AjouterOutilFragment getProfileFragment() {
+        return profileFragment;
+    }
+
+    public void setProfileFragment(AjouterOutilFragment profileFragment) {
+        this.profileFragment = profileFragment;
     }
 
     public void setBoiteMessagerieFragment(BoiteMessagerieFragment boiteMessagerieFragment) {
@@ -44,12 +53,22 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
         }
     }
 
+    public AjouterOutilFragment getAjouterOutilFragment() {
+        return ajouterOutilFragment;
+    }
+
+    public void setAjouterOutilFragment(AjouterOutilFragment ajouterOutilFragment) {
+        this.ajouterOutilFragment = ajouterOutilFragment;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principale);
         boiteMessagerieFragment = new BoiteMessagerieFragment();
-        profileFragment  = new ProfileFragment();
+        profileFragment  = new AjouterOutilFragment();
+        ajouterOutilFragment = new AjouterOutilFragment();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, profileFragment).commit();
 
         // firebase
@@ -76,10 +95,13 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
                 break;
             case R.id.acceuil:
                 //selectedFragment = new AcceuilFragment();
-                selectedFragment = editFragment;
+                selectedFragment = profileFragment;
                 break;
             case R.id.boite_messagerie:
                 selectedFragment = boiteMessagerieFragment;
+                break;
+            case R.id.ajouter_outil:
+                selectedFragment = ajouterOutilFragment;
                 break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, selectedFragment).commit();

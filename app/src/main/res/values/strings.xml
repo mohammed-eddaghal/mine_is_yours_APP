@@ -43,6 +43,15 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="ajouter_outil">Ajout Outil</string>
+    <string-array name="categorie_outil">
+        <item>Autres</item>
+        <item>Outils Cuisine</item>
+        <item>Outils Garage</item>
+        <item>Outils InformatiqueS</item>
+        <item>Meubles</item>
+        <item>Divertissement</item>
 
+    </string-array>
 
 </resources>
