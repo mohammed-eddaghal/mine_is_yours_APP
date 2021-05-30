@@ -93,4 +93,11 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public void cloneUser(User user){
+        setId(user.getId());
+        setLantitude(user.getLantitude());
+        setLangitude(user.getLangitude());
+        setLastName(user.getLastName());
+    }
 }

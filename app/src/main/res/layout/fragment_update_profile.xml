@@ -28,6 +28,8 @@
             android:backgroundTint="@color/colorPrimary1"
             android:background="@color/colorPrimaryDark1"
             android:layout_marginLeft="40dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
             android:layout_marginTop="-40dp"
             android:clickable="true"
             android:src="@drawable/ic_baseline_edit_24"
