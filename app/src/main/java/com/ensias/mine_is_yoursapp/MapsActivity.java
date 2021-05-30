@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,7 +41,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     String userPath="users", toolPath="types";
-    final static String keyUser = "G6bKgI6SJqdYCjwTmK4rDGRK33Q2";
+    final static FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+    final static String keyUser = userFirebase.getUid();
 
     double lang,lat;
 

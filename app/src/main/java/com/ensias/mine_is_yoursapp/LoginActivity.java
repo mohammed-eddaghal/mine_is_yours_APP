@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -204,7 +205,8 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
                             DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
-                            String id = database.getReference("id").push().getKey();
+                            FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+                            String id = userFirebase.getUid();
                             User user = new User(id,2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
                             reference.child("users").push().setValue(user);
                             startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
