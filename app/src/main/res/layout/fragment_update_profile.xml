@@ -22,16 +22,24 @@
             android:src="@drawable/icon_profile"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-40dp"
+            android:backgroundTint="@color/colorPrimary1"
+            android:background="@color/colorPrimaryDark1"
             android:layout_marginLeft="40dp"
             android:src="@android:drawable/ic_btn_speak_now"
             app:srcCompat="@android:drawable/ic_dialog_email" />
+            android:layout_marginTop="-40dp"
+            android:clickable="true"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:layout_anchor="@id/cardView"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 
         <TextView
+            android:id="@+id/nom_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nom_complet"
@@ -47,13 +55,14 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:orientation="vertical"
-        >
+        android:background="@color/black"
+        android:backgroundTint="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -79,14 +88,16 @@
                     android:hint="@string/Username"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    />
+                    app:backgroundTint="#000"/>
+
                 <EditText
                     android:id="@+id/lastname_profile"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/Username"
                     android:inputType="text"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000"/>
 
             </LinearLayout>
 
@@ -96,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -123,7 +134,8 @@
                     android:hint="@string/phone"
                     android:textColor="@color/black"
                     android:inputType="phone"
-                    style="@style/Widget.AppCompat.EditText"/>
+                    style="@style/Widget.AppCompat.EditText"
+                    app:backgroundTint="#000"/>
 
             </LinearLayout>
 
@@ -133,7 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -158,7 +170,8 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/Email"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000"/>
 
             </LinearLayout>
 
@@ -168,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -193,7 +206,8 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/address"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000"/>
 
             </LinearLayout>
 
