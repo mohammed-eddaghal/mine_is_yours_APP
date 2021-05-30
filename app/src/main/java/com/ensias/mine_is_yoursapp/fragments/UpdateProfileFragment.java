@@ -1,5 +1,6 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,10 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UpdateProfileFragment extends Fragment {
 
+    int PICK_IMAGE_MULTIPLE = 1;
     private DatabaseReference mDatabase;
 
     TextView firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
-    Button annule_profile, update_profile;
+    Button annule_profile, update_profile , photo;
     User user ;
 
     public UpdateProfileFragment(User user) {
@@ -47,12 +49,20 @@ public class UpdateProfileFragment extends Fragment {
 
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
+        photo = view.findViewById(R.id.photo);
 
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
         phone_profile.setText(user.getPhone());
         email_profile.setText(user.getEmail());
         add_profile.setText(user.getAddress());
+
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadImgs();
+            }
+        });
 
         ClickUpdate();
 
@@ -103,5 +113,18 @@ public class UpdateProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void uploadImgs() {
+        // initialising intent
+        Intent intent = new Intent();
+
+        // setting type to select to be image
+        intent.setType("image/*");
+
+        // allowing multiple image to be selected
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_MULTIPLE);
     }
 }
