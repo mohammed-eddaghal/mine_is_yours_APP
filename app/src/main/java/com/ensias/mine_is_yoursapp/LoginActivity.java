@@ -201,16 +201,13 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
-
                             DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
-
-                            String id = database.getReference("id").push().getKey();//generate unique ID
-
+                            String id = database.getReference("id").push().getKey();
                             User user = new User(id,2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
                             reference.child("users").push().setValue(user);
-
-                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));//User session !!
+                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
                             SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
                             sessionManager.createUserSession(user,reg_password.getText().toString().trim());
                         }else{
