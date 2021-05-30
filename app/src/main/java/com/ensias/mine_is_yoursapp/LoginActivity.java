@@ -1,8 +1,5 @@
 package com.ensias.mine_is_yoursapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +10,23 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.ensias.mine_is_yoursapp.Control.ForgotPassword;
+import com.ensias.mine_is_yoursapp.Control.SessionManager;
+import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password, reg_username, reg_password,reg_firstName, reg_lastName, reg_email, reg_confirmemail;
@@ -26,8 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout txtInLayoutUsername, txtInLayoutPassword, txtInLayoutRegPassword;
     CheckBox rememberMe;
     FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
         username = findViewById(R.id.username);
@@ -37,6 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         txtInLayoutUsername = findViewById(R.id.txtInLayoutUsername);
         txtInLayoutPassword = findViewById(R.id.txtInLayoutPassword);
         rememberMe = findViewById(R.id.rememberMe);
+
+        SessionManager sessionManager = new SessionManager(LoginActivity.this,SessionManager.SESSION_REMEMBERME);
+        if(sessionManager.checkRememberMe()){
+            HashMap<String,String> userLogin = sessionManager.getRememberMeSessionDetails();
+            username.setText(userLogin.get(SessionManager.KEY_SESSION_EMAIL));
+            password.setText(userLogin.get(SessionManager.KEY_SESSION_PASSWORD));
+        }
 
 
         ClickLogin();
@@ -50,6 +68,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    //SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+    //String rememberBox = "Hello";//preferences.getString("remember","");
+    //boolean isTrue = rememberBox.equals("true");
+    //Intent intent = new Intent(LoginActivity.this,MenuPrincipaleActivity.class);
+    //startActivity(intent);
 
     //This is method for doing operation of check login
     private void ClickLogin() {
@@ -81,17 +104,29 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (rememberMe.isChecked()) {
-                    //box is checked ?
-                } else {
-                    //box is not checked ?
+                    SessionManager sessionManager = new SessionManager(LoginActivity.this, SessionManager.SESSION_REMEMBERME);
+                    sessionManager.createRememberMeSession(username.getText().toString().trim(), password.getText().toString().trim());
                 }
-
+/*
+                    SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","true");
+                    editor.apply();
+                    Toast.makeText(LoginActivity.this,"Checked",Toast.LENGTH_SHORT).show();
+                } else {
+                    SharedPreferences preferences = getSharedPreferences("checkbox",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember","false");
+                    editor.apply();
+                    Toast.makeText(LoginActivity.this,"Unchecked",Toast.LENGTH_SHORT).show();
+                }
+*/
                 mAuth.signInWithEmailAndPassword(username.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "Welcome!",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));///--------------------------------------------------------------------------------
                     }else{
                         Toast.makeText(LoginActivity.this,"Something went wrong !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
                     }
@@ -167,8 +202,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                            DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
+                            FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+                            String id = userFirebase.getUid();
+                            User user = new User(id,2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
+                            reference.child("users").push().setValue(user);
+                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
+                            SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
+                            sessionManager.createUserSession(user,reg_password.getText().toString().trim());
                         }else{
                             Toast.makeText(LoginActivity.this,"User was not created !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
                         }
@@ -179,6 +222,10 @@ public class LoginActivity extends AppCompatActivity {
 
         dialog.show();
         //startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+    }
+
+    public void callForgotPassword(View view){
+        startActivity(new Intent(getApplicationContext(), ForgotPassword.class));
     }
 
 }

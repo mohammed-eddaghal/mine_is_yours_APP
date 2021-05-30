@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/boite_messagerie"
+        android:enabled="true"
+        android:icon="@drawable/baseline_email_black_24"
+        android:title="@string/bottom_messagerie"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/acceuil"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_black_24"
+        android:title="@string/bottom_acceuil"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/ajouter_outil"
+        android:enabled="true"
+        android:icon="@drawable/outline_add_black_24"
+        android:title="@string/ajouter_outil"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:icon="@drawable/twotone_person_black_24"
+        android:title="@string/bottom_autre"
+        app:showAsAction="ifRoom" />
+</menu>
