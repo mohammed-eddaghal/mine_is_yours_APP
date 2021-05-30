@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.ProfileFragment"
-    android:background="@color/white">
+    tools:context=".fragments.UpdateProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.25"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:background="@drawable/diego_ph">
@@ -18,18 +18,27 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/icon_profile"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-40dp"
+            android:layout_marginLeft="40dp"
+            android:src="@android:drawable/ic_baseline_edit_24"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nom_complet"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             style="@style/TextName"/>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,8 +46,8 @@
         android:layout_weight="0.6"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,8 +56,8 @@
             android:layout_marginTop="14dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_profile"/>
 
@@ -64,10 +73,20 @@
                     style="@style/TextBlackTitle"/>
 
                 <EditText
-                    android:id="@+id/username_profile"
+                    android:id="@+id/firstname_profile"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/Username"/>
+                    android:hint="@string/Username"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    />
+                <EditText
+                    android:id="@+id/lastname_profile"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/Username"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 
@@ -80,8 +99,8 @@
             android:layout_marginTop="14dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_phone"/>
@@ -101,7 +120,10 @@
                     android:id="@+id/phone_profile"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/phone"/>
+                    android:hint="@string/phone"
+                    android:textColor="@color/black"
+                    android:inputType="phone"
+                    style="@style/Widget.AppCompat.EditText"/>
 
             </LinearLayout>
 
@@ -114,8 +136,8 @@
             android:layout_marginTop="14dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_email"/>
@@ -135,7 +157,8 @@
                     android:id="@+id/email_profile"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/Email"/>
+                    android:hint="@string/Email"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -148,8 +171,8 @@
             android:layout_marginTop="14dp">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_address"/>
@@ -169,7 +192,8 @@
                     android:id="@+id/add_profile"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/address"/>
+                    android:hint="@string/address"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -180,7 +204,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:layout_marginTop="14dp">
+            android:layout_marginTop="20dp">
 
             <Button
                 android:id="@+id/annule_profile"

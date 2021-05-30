@@ -7,9 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ensias.mine_is_yoursapp.fragments.BoiteMessagerieFragment;
-import com.ensias.mine_is_yoursapp.fragments.EditFragment;
 import com.ensias.mine_is_yoursapp.fragments.ProfileFragment;
-import com.ensias.mine_is_yoursapp.model.User;
+import com.ensias.mine_is_yoursapp.fragments.UpdateProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,7 +21,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private BoiteMessagerieFragment boiteMessagerieFragment;
     private ProfileFragment profileFragment;
-    private EditFragment editFragment;
+
     BottomNavigationView bottomNavigationView;
 
     public BoiteMessagerieFragment getBoiteMessagerieFragment() {
@@ -76,7 +75,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
                 break;
             case R.id.acceuil:
                 //selectedFragment = new AcceuilFragment();
-                selectedFragment = editFragment;
+                selectedFragment = boiteMessagerieFragment;
                 break;
             case R.id.boite_messagerie:
                 selectedFragment = boiteMessagerieFragment;
