@@ -25,6 +25,7 @@
         android:layout_centerHorizontal="true"
         android:iconifiedByDefault="false"
         android:queryHint="Search Here"
+        bac
         android:background="@color/white"/>
 </RelativeLayout>
 
