@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-40dp"
             android:layout_marginLeft="40dp"
-            android:src="@android:drawable/ic_baseline_edit_24"
+            android:src="@android:drawable/ic_btn_speak_now"
             app:srcCompat="@android:drawable/ic_dialog_email" />
 
 
