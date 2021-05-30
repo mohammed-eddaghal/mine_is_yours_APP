@@ -34,11 +34,13 @@ public class SessionManager {
         editor = userSession.edit();
     }
 
-    public void createUserSession(User user){
+    public void createUserSession(User user,String password){
         editor.putString(USER_LASTNAME,user.getLastName());
         editor.putString(USER_FIRSTNAME,user.getFirstName());
         editor.putString(USER_ID,user.getId());
         editor.putString(USER_IMAGE,user.getImage());
+        editor.putString(KEY_EMAIL,user.getEmail());
+        editor.putString(KEY_PASSWORD,password);
         //editor.putFloat(USER_LANGITUDE,user.getLangitude());
         //editor.putFloat(USER_LANTITUDE,user.getLantitude());
     }

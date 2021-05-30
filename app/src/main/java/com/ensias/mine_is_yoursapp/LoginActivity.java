@@ -206,7 +206,10 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
                             User user = new User("2",2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
                             myRef.push().setValue(user);
-                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
+                            User userSession= new User("4", 0.0, 0.0, reg_firstName.getText().toString().trim(), reg_lastName.getText().toString().trim(), reg_email.getText().toString().trim(), null);
+                            SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
+                            sessionManager.createUserSession(userSession,reg_password.getText().toString().trim());
                         }else{
                             Toast.makeText(LoginActivity.this,"User was not created !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
                         }
