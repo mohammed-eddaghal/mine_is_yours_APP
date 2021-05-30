@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Control.ForgotPassword"></activity>
         <activity android:name=".DashboardActivity" />
         <activity android:name=".MenuPrincipaleActivity" />
         <activity android:name=".LoginActivity">

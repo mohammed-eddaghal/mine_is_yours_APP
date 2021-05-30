@@ -5,15 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.ensias.mine_is_yoursapp.Control.SessionManager;
+import com.ensias.mine_is_yoursapp.LoginActivity;
 import com.ensias.mine_is_yoursapp.R;
-import com.ensias.mine_is_yoursapp.model.Message;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +45,12 @@ public class ProfileFragment extends Fragment {
 
         edit_profile = view.findViewById(R.id.edit_profile);
         back =  view.findViewById(R.id.back_profile);
+
+        SessionManager sessionManager = new SessionManager(getContext(),SessionManager.SESSION_REMEMBERME);
+        if(sessionManager.checkRememberMe()){
+            HashMap<String,String> userLogin = sessionManager.getRememberMeSessionDetails();
+            email_profile.setText(userLogin.get(SessionManager.KEY_SESSION_EMAIL));
+        }
 /*
         back.setOnClickListener(new View.OnClickListener(){
             @Override
