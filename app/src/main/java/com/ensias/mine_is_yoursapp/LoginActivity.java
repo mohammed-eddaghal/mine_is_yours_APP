@@ -201,15 +201,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            FirebaseDatabase database = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/");
-                            DatabaseReference myRef = database.getReference();
                             Toast.makeText(LoginActivity.this, "User created successufully!",Toast.LENGTH_SHORT).show();
-                            User user = new User("2",2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
-                            myRef.push().setValue(user);
-                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
-                            User userSession= new User("4", 0.0, 0.0, reg_firstName.getText().toString().trim(), reg_lastName.getText().toString().trim(), reg_email.getText().toString().trim(), null);
+
+                            DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
+
+                            String id = database.getReference("id").push().getKey();//generate unique ID
+
+                            User user = new User(id,2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
+                            reference.child("users").push().setValue(user);
+
+                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));//User session !!
                             SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
-                            sessionManager.createUserSession(userSession,reg_password.getText().toString().trim());
+                            sessionManager.createUserSession(user,reg_password.getText().toString().trim());
                         }else{
                             Toast.makeText(LoginActivity.this,"User was not created !"+task.getException().getMessage() ,Toast.LENGTH_LONG).show();
                         }
