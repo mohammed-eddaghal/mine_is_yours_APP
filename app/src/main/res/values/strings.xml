@@ -44,5 +44,36 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="ajouter_outil">Ajout Outil</string>
+    <string-array name="categorie_outil">
+        <item>Autres</item>
+        <item>Outils Cuisine</item>
+        <item>Outils Garage</item>
+        <item>Outils InformatiqueS</item>
+        <item>Meubles</item>
+        <item>Divertissement</item>
 
+    </string-array>
+
+
+    <string name="action_sign_in_short">Register</string>
+    <string name="email">Email</string>
+    <string name="change_email">Changer ton email</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="send_password_reset_email">Envoyer un e-mail de réinitialisation du mot de passe</string>
+    <string name="new_pass">New Password</string>
+    <string name="title_activity_profile">Firebase</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="hint_email">Email</string>
+    <string name="title_activity_reset_password">ForgotPassordActivity</string>
+    <string name="btn_forgot_password">Mot de passe oublié?</string>
+    <string name="btn_reset_password">réinitialiser le mot de passe</string>
+    <string name="btn_back"><![CDATA[<< retour]]></string>
+    <string name="hint_new_email">nouveau email</string>
+    <string name="btn_change">Changer</string>
+    <string name="btn_send">Envoyer</string>
+    <string name="btn_remove">Supprimer</string>
+    <string name="btn_sign_out">Se déconnecter</string>
+    <string name="lbl_forgot_password">Mot de passe oublié?</string>
+    <string name="forgot_password_msg">Nous avons juste besoin de votre adresse e-mail enregistrée pour vous envoyer des instructions de réinitialisation de mot de passe.</string>
 </resources>

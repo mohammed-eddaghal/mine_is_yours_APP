@@ -23,6 +23,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.ensias.mine_is_yoursapp.Control.SessionManager;
+import com.ensias.mine_is_yoursapp.LoginActivity;
+
+import java.util.HashMap;
+
 /**
  * A simple {@link Fragment} subclass.
 
@@ -61,6 +66,14 @@ public class ProfileFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getUid());
 
         mDatabase.addValueEventListener(new ValueEventListener() {
+
+/*
+        SessionManager sessionManager = new SessionManager(getContext(),SessionManager.SESSION_REMEMBERME);
+        if(sessionManager.checkRememberMe()){
+            HashMap<String,String> userLogin = sessionManager.getRememberMeSessionDetails();
+            email_profile.setText(userLogin.get(SessionManager.KEY_SESSION_EMAIL));
+        }
+*/
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myUser = dataSnapshot.getValue(User.class) ;
