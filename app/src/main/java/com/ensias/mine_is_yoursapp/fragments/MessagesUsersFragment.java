@@ -44,6 +44,9 @@ public class MessagesUsersFragment extends Fragment {
     private FirebaseUser userFirebase;
     private DatabaseReference databaseReference;
     private User user;
+    ValueEventListener listener;
+    private DatabaseReference databaseReference2;
+    ValueEventListener listener2;
 
     CircleImageView profile_image;
     TextView username;
@@ -53,6 +56,7 @@ public class MessagesUsersFragment extends Fragment {
     MessageAdapter messageAdapter;
     List<Message> messagesList;
     RecyclerView recyclerView;
+
 
     private Fragment fragmentPrecedant;
 
@@ -65,6 +69,14 @@ public class MessagesUsersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if ( databaseReference != null && listener != null)
+                databaseReference.removeEventListener(listener);
 
     }
 
@@ -110,7 +122,7 @@ public class MessagesUsersFragment extends Fragment {
 
         databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("users").child(user.getId());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        listener =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -127,7 +139,8 @@ public class MessagesUsersFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        databaseReference.addValueEventListener(listener);
         readMessages(userFirebase.getUid(),user.getId(),user.getImage());
         messageAdapter = new MessageAdapter(getContext() , messagesList,user.getImage());
         recyclerView.setAdapter(messageAdapter);
@@ -141,9 +154,9 @@ public class MessagesUsersFragment extends Fragment {
     }
     private  void readMessages(final String myid , final String userId , final String imageurl){
         messagesList = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+        databaseReference2 = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("messages");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        listener2 =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //messagesList.clear();
@@ -160,6 +173,7 @@ public class MessagesUsersFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        };
+        databaseReference2.addValueEventListener(listener2);
     }
 }
