@@ -38,6 +38,9 @@ public class OtherUserProfileFragment extends Fragment {
 
 
     private DatabaseReference databaseReference;
+    ValueEventListener listener;
+    private DatabaseReference databaseReference2;
+    ValueEventListener listener2;
     private String idUser;
     private User user;
 
@@ -50,6 +53,7 @@ public class OtherUserProfileFragment extends Fragment {
     ArrayList<Outil> listOutils;
     OutilAdapter outilAdapter;
 
+
     public OtherUserProfileFragment(String idUser) {
        this.idUser=idUser;
     }
@@ -57,6 +61,15 @@ public class OtherUserProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if ( databaseReference != null && listener != null)
+            databaseReference.removeEventListener(listener);
+        if ( databaseReference2 != null && listener2 != null)
+            databaseReference2.removeEventListener(listener2);
     }
 
     @Override
@@ -77,7 +90,7 @@ public class OtherUserProfileFragment extends Fragment {
         importerOutilsCourantUser();
 
         btn_contacter.setOnClickListener(e ->{
-            ((MenuPrincipaleActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, new MessagesUsersFragment(user)).commit();
+            ((MenuPrincipaleActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, new MessagesUsersFragment(this,user)).commit();
         });
 
         //ajouter les outils
@@ -86,9 +99,8 @@ public class OtherUserProfileFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        outilAdapter = new OutilAdapter(getContext(), listOutils);
+        outilAdapter = new OutilAdapter((MenuPrincipaleActivity) getActivity(),getContext(), listOutils,this);
         recyclerView.setAdapter(outilAdapter);
-        Log.e("tet","  "+listOutils.size());
 
         return view;
     }
@@ -97,7 +109,7 @@ public class OtherUserProfileFragment extends Fragment {
         listOutils = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("outils");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        listener =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listOutils.clear();
@@ -109,8 +121,6 @@ public class OtherUserProfileFragment extends Fragment {
                         Log.e("outil","enter");
                         outilAdapter.addItem(outil);
                     }
-
-
                 }
             }
 
@@ -118,17 +128,17 @@ public class OtherUserProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-        Log.e("outil","enter");
+        };
+        databaseReference.addValueEventListener(listener);
     }
 
     private void importerInfoUser() {
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+        databaseReference2 = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("users").child(idUser);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        listener2 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                user = dataSnapshot.getValue(User.class);
                 email.setText(user.getEmail());
                 username.setText(user.getLastName() + " " + user.getFirstName() );
                 if ( user.getImage().equals("default")){
@@ -142,6 +152,7 @@ public class OtherUserProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        databaseReference2.addValueEventListener(listener2);
     }
 }

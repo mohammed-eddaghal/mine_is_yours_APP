@@ -54,9 +54,11 @@ public class MessagesUsersFragment extends Fragment {
     List<Message> messagesList;
     RecyclerView recyclerView;
 
+    private Fragment fragmentPrecedant;
 
 
-    public MessagesUsersFragment(User user) {
+    public MessagesUsersFragment(Fragment fragment,User user) {
+        this.fragmentPrecedant = fragment;
         this.user = user;
     }
 
@@ -77,8 +79,8 @@ public class MessagesUsersFragment extends Fragment {
         toolbar.setNavigationOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                BoiteMessagerieFragment fragment = ((MenuPrincipaleActivity)getActivity()).getBoiteMessagerieFragment();
-                 getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragmentPrecedant).commit();
             }
         });
 
@@ -106,7 +108,8 @@ public class MessagesUsersFragment extends Fragment {
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getId());
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                .getReference("users").child(user.getId());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,10 +148,12 @@ public class MessagesUsersFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //messagesList.clear();
                 for ( DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
                     Message message = snapshot.getValue(Message.class);
                     if (message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
                             message.getIdTo().equals(userId) && message.getIdFrom().equals(myid)) {
                         messageAdapter.addItem(message);
+                        recyclerView.scrollToPosition(messageAdapter.getItemCount()- 1);
                     }
                 }
             }

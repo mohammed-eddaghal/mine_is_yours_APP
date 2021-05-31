@@ -90,14 +90,17 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_acceuil, container, false);
 
-        user = new User();
+        user = new User("id",7d,8d,"yasser","faleh","mail","default");
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment)( getActivity().getSupportFragmentManager())
                 .findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(this);
+       // mapFragment.getMapAsync(this);
+
+
+
         //FireBaseTraitement.getListOfTools();
 
         editsearch = view.findViewById(R.id.search);
@@ -138,10 +141,11 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
         // Add a marker in Sydney and move the camera
 
-        LatLng mark = new LatLng(lat, lang);
+        LatLng mark = new LatLng(7d, 7d);
 
 
-        mMap.addMarker(new MarkerOptions().position(mark).title(user.getLastName()));
+        mMap.addMarker(new MarkerOptions().position(mark).title("test"));
+       // mMap.addMarker(new MarkerOptions().position(mark).title(user.getLastName()));
 
 
 
