@@ -1,7 +1,9 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;
@@ -28,6 +31,8 @@ import com.ensias.mine_is_yoursapp.LoginActivity;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
 
@@ -37,6 +42,7 @@ public class ProfileFragment extends Fragment {
 
     private DatabaseReference mDatabase;
 
+    CircleImageView myImage ;
     TextView nom_user, username_profile, phone_profile, email_profile, add_profile;
     FrameLayout back ;
     Button edit_profile ;
@@ -54,7 +60,9 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        myImage = view.findViewById(R.id.photo);
         nom_user = view.findViewById(R.id.nom_user);
+
         username_profile = view.findViewById(R.id.username_profile);
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
@@ -80,10 +88,18 @@ public class ProfileFragment extends Fragment {
                 myUser = dataSnapshot.getValue(User.class) ;
 
                 //nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
+
                 username_profile.setText(myUser.getFirstName()+" " + myUser.getLastName());
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
+/*
+                if ( myUser.getImage().equals("default")){
+                    myImage.setImageResource(R.mipmap.ic_launcher);
+                }else{
+                    Glide.with(ProfileFragment.this).load(myUser.getImage()).into(myImage);
+                }
+ */
             }
 
             @Override

@@ -16,21 +16,22 @@
         android:background="@drawable/diego_ph">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/icon_profile"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/photo"
+            android:id="@+id/editPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary1"
             android:background="@color/colorPrimaryDark1"
             android:layout_marginLeft="40dp"
-            android:src="@android:drawable/ic_btn_speak_now"
+            android:src="@drawable/ic_baseline_edit_24"
             app:srcCompat="@android:drawable/ic_dialog_email" />
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-50dp"
             android:clickable="true"
             android:src="@drawable/ic_baseline_edit_24"
             app:layout_anchor="@id/cardView"

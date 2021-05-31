@@ -1,41 +1,61 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ensias.mine_is_yoursapp.R;
+import com.ensias.mine_is_yoursapp.adapters.SliderAdapter;
+import com.ensias.mine_is_yoursapp.model.SliderItem;
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.UUID;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateProfileFragment extends Fragment {
 
     int PICK_IMAGE_MULTIPLE = 1;
-
-    // 1 - Uri of image selected by user
-    private Uri uriImageSelected;
-
-    // 2 - STATIC DATA FOR PICTURE
-    private static final int RC_CHOOSE_PHOTO = 200;
-
     private DatabaseReference mDatabase;
+    private StorageReference storageReference;
+    public Uri ImageUri;
+    String imageUrl ;
 
     EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
     TextView nom_user ;
     Button annule_profile, update_profile ;
     FloatingActionButton photo;
+    CircleImageView myImage ;
 
     User user ;
 
@@ -54,6 +74,7 @@ public class UpdateProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_profile, container, false);
 
+        myImage = view.findViewById(R.id.photo);
         nom_user = view.findViewById(R.id.nom_user);
 
         firstname_profile = view.findViewById(R.id.firstname_profile);
@@ -64,9 +85,9 @@ public class UpdateProfileFragment extends Fragment {
 
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
-        photo = view.findViewById(R.id.photo);
+        photo = view.findViewById(R.id.editPhoto);
 
-        nom_user.setText(user.getFirstName());
+        //nom_user.setText(user.getFirstName());
 
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
@@ -117,6 +138,13 @@ public class UpdateProfileFragment extends Fragment {
 
                 } else {
                     mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getId());
+/*
+                    final ProgressDialog pd = new ProgressDialog(getContext());
+                    pd.setMessage("Sauvegarde en cours ! ");
+                    pd.show();
+*/
+                    imageUpload(ImageUri);
+                    user.setImage(imageUrl);
 
                     user.setFirstName(firstname_profile.getText().toString());
                     user.setLastName(lastname_profile.getText().toString());
@@ -139,10 +167,46 @@ public class UpdateProfileFragment extends Fragment {
         // setting type to select to be image
         intent.setType("image/*");
 
-        // allowing multiple image to be selected
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_MULTIPLE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == getActivity().RESULT_OK && null != data) {
+
+            // Get the Image from data
+            ImageUri = data.getData();
+            myImage.setImageURI(ImageUri);
+
+        } else {
+            // show this if no image is selected
+            Toast.makeText(getActivity(), "Aucune image sélectionnée !", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String getFileExtension(Uri uri ){
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void imageUpload(Uri uri){
+        final StorageReference fileReference = FirebaseStorage.getInstance("gs://mineisyours-68d08.appspot.com/")
+                .getReference().child("usersprofile/"+System.currentTimeMillis()+"."+getFileExtension(uri));
+
+        fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext() , e.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
