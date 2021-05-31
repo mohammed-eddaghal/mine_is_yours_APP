@@ -1,5 +1,6 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import com.ensias.mine_is_yoursapp.Item;
 import com.ensias.mine_is_yoursapp.MapsActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.Tool;
+import com.ensias.mine_is_yoursapp.model.Outil;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,11 +30,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +50,14 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
     SupportMapFragment mapFragment;
     List<Item> itemList;
     List<Item> listItemMap = new ArrayList<>();
-    List<Tool> tools=new ArrayList<>();
+    List<Outil> tools=new ArrayList<>();
 
     List<Marker> markers = new ArrayList<>();
 
     Marker marker;
 
     private GoogleMap mMap;
-    String userPath="users", toolPath="types";
+    String userPath="users", toolPath="outils";
     final static FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
     final static String keyUser = userFirebase.getUid();
 
@@ -154,30 +160,61 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        searchQuery=query;
-        setItemsList();
-        for (Marker marker:markers){
-            marker.remove();
-        }
-        markers.clear();
+        DatabaseReference databaseReference = firebaseDatabase.getReference(toolPath);
+        final List<Outil> tools= new ArrayList<>();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int i=0;
+                for (DataSnapshot contact : snapshot.getChildren()) {
+                    Log.d("test",""+(++i));
+                    Outil c = contact.getValue(Outil.class);
+                    //Log.d("contact:: ", c.toString());
+                    if( (c.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (c.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
+                    {
 
-        int x=0;
-        //Toast.makeText(MapsActivity.this,searchQuery,Toast.LENGTH_LONG).show();
-        Toast.makeText(getActivity(),
-                lat+" || "+lang,
-                Toast.LENGTH_LONG).show();
-        for(Item item:itemList){
+                            Log.d("contact HiHiHi:: ", "zzzzzz "+c.toString());
 
-            if((item.getTool().getToolName().toLowerCase()).compareTo(query.toLowerCase())==0){
-                drawMarker(new LatLng(item.getUser().getLantitude(),item.getUser().getLangitude()),
-                        BitmapDescriptorFactory.HUE_BLUE, item);
+                            User userHandel= new User();
+                            DatabaseReference databaseReference = firebaseDatabase.getReference(userPath);
+                            databaseReference.child(c.getIdOwner()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+                                    if (!task.isSuccessful()) {
+                                        Log.e("firebase static", "Error getting data", task.getException());
+                                    }
+                                    else {
+                                        userHandel.cloneUser(task.getResult().getValue(User.class));
+                                        //user3.setLastName(task.getResult().getValue(User.class).getLastName());
+                                        Log.d("firebase test 00", userHandel.toString());
+                                        Log.d("firebase test 11", task.getResult().getValue(User.class).toString());
+                                        drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_CYAN,c);
+                                    }
+                                }
+                            });
+
+                            //userHandel.cloneUser(FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) );
+                            //Log.d("contact KhKhKh:: ", FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) .toString());
+                            //drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_RED,c);
+
+
+                        Toast.makeText(getActivity(),""+c.getId(),Toast.LENGTH_LONG).show();
+                    }
+                    tools.add(c);
+                }
+
+                for(Outil outil:tools){
+                    if( (outil.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (outil.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
+                    Log.d("contact HOHOHO:: ", "zzzzzz "+outil.toString());
+                }
             }
-        }
 
-        if(tools.size()==0)Log.d("testOne","tools list is umpty");
-        for(Tool tool:tools){
-            Log.d("testZero",tool.getToolName());
-        }
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
 
         return true;
     }
@@ -202,7 +239,7 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
         }
     }
 
-    private MarkerOptions drawMarker(LatLng point,float id,Item item) {
+    private MarkerOptions drawMarker(LatLng point,float id,Outil item) {
         // Creating an instance of MarkerOptions
         MarkerOptions markerOptions = new MarkerOptions();
 
@@ -212,7 +249,7 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                 .defaultMarker(id));
 
         // Adding marker on the Google Map
-        marker = mMap.addMarker(markerOptions.title(item.getUser().getLastName()+"--"+item.getTool().getToolName()));
+        marker = mMap.addMarker(markerOptions.title(item.getId()));
         markers.add(marker);
 
         mMap.setOnMarkerClickListener(this);

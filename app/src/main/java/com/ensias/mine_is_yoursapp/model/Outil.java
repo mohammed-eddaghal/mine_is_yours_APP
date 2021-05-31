@@ -5,13 +5,27 @@ import android.net.Uri;
 import java.util.ArrayList;
 
 public class Outil {
+    private String description;
+    private String etat;
     private String id;
     private String idOwner;
-    private String type;
-    private String etat = "available";
     private String titre;
-    private String description="";
+    private String type;
+
     private ArrayList<String> uris=new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Outil{" +
+                "description='" + description + '\'' +
+                ", etat='" + etat + '\'' +
+                ", id='" + id + '\'' +
+                ", idOwner='" + idOwner + '\'' +
+                ", titre='" + titre + '\'' +
+                ", type='" + type + '\'' +
+                ", uris=" + uris +
+                '}';
+    }
 
     public String getIdOwner() {
         return idOwner;
@@ -55,7 +69,8 @@ public class Outil {
         this.uris = uris;
     }
     public Outil(){
-
+    description="";
+    etat="available";
     }
 
     public String getId() {
