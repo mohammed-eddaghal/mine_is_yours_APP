@@ -94,10 +94,10 @@ public class User {
         this.address = address;
     }
 
-    public void cloneUser(User user){
+    /*public void cloneUser(User user){
         setId(user.getId());
         setLantitude(user.getLantitude());
         setLangitude(user.getLangitude());
         setLastName(user.getLastName());
-    }
+    }*/
 }

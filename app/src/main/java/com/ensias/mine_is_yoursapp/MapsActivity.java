@@ -1,15 +1,32 @@
 package com.ensias.mine_is_yoursapp;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,11 +35,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +62,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker marker;
 
     private GoogleMap mMap;
-    String userPath="users", toolPath="outils";
+    String userPath="users", toolPath="types";
     final static FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
     final static String keyUser = userFirebase.getUid();
-    //final static String keyUser ="-MauxlClc85WBd8lWfQX";
+
     double lang,lat;
 
     String searchQuery;
 
+    FusedLocationProviderClient fusedLocationProviderClient;
 
 
     // creating a variable for our
@@ -64,15 +87,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SearchView editsearch;
 
     String key;
-    private MarkerOptions mapMarker;
+    MarkerOptions mapMarker;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         user = new User();
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -83,14 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editsearch = findViewById(R.id.search);
         editsearch.setOnQueryTextListener(this);
 
-
-
-        lang = getIntent().getDoubleExtra("langitud",1);
-        lat = getIntent().getDoubleExtra("latitude",1);
-
         new LoadData().execute();
-
-
 
     }
 
@@ -103,22 +119,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void mapContent(){
-        if(user.getLastName()!=null){
+        /*if(user.getLastName()!=null){
             Log.d("tagTestxx","xxx ||| "+user.getLastName()+"/ "+user.getLantitude()+"/ "+user.getLangitude());
-            lang = user.getLangitude();
-            lat = user.getLantitude();
+            //lang = user.getLangitude();
+            //lat = user.getLantitude();
         }else{
             Log.d("tagTestxx","xxx |||");
-            lat =33.9712;
-            lang =-6.8184;
-        }
+            //lang = getIntent().getDoubleExtra("langitud",1);
+            //lat = getIntent().getDoubleExtra("latitude",1);
+        }*/
 
         // Add a marker in Sydney and move the camera
 
-        LatLng mark = new LatLng(lat, lang);
+        LatLng mark = new LatLng(33.994, -6.736);
 
 
-        mMap.addMarker(new MarkerOptions().position(mark).title(user.getLastName()));
+        mMap.addMarker(new MarkerOptions().position(mark).title("title Test"));
 
 
 
@@ -134,12 +150,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        try {
-            FireBaseTraitement.getListTool(query,toolPath,firebaseDatabase,databaseReference);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         searchQuery=query;
         setItemsList();
         for (Marker marker:markers){
@@ -218,10 +228,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    public void getUser(@NonNull DataSnapshot snapshot) throws InterruptedException {
+    /*public void getUser(@NonNull DataSnapshot snapshot) throws InterruptedException {
         //User userx = FireBaseTraitement.findUserByID(keyUser,snapshot,MapsActivity.this);
 
-        User userx= FireBaseTraitement.getUserByID(keyUser,userPath,firebaseDatabase,databaseReference);
+        User userx= FireBaseTraitement.getUserByID(keyUser,userPath,firebaseDatabase);
         Log.d("tagTest","firebase traitment"+userx.getLastName()+"/ "+userx.getLantitude()+"/ "+userx.getLangitude());
 
         user.setId(userx.getId());
@@ -231,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("tagTestDDD","firebase traitment"+user.getLastName()+"/ "+user.getLantitude()+"/ "+user.getLantitude());
 
         mapContent();
-    }
+    }*/
 
     public class LoadData extends AsyncTask<Void, Void, Void> {
 
@@ -241,20 +251,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // below line is used to get reference for our database.
             //databaseReference = firebaseDatabase.getReference(userPath);
             Log.d("test","log test 0");
+
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+
+
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         protected Void doInBackground(Void... voids) {
             // below line is used to get the
             // instance of our FIrebase database.
 
-            try {
-                user.cloneUser(FireBaseTraitement.getUserByID(keyUser,userPath,firebaseDatabase,databaseReference));
+           /* try {
+                user.cloneUser(FireBaseTraitement.getUserByID(keyUser,databaseReference));
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             //databaseReference.addValueEventListener(MapsActivity.this);
+
+
+            //check permission
+            if(ActivityCompat.checkSelfPermission(MapsActivity.this
+                    , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(MapsActivity.this
+                    , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
+                // if both permissions garanted => call methode
+                //MapsActivity.this.getCurrentLocation();
+
+
+            }else{
+                //when permission is not garanted
+                //request permission
+
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                },100);
+            }
 
             Log.d("test","log test 1"+user.toString());
 
@@ -267,45 +302,86 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //FireBaseTraitement.getUserByID(keyUser,databaseReference);
             mapContent();
             Log.d("test","log test 2"+user.toString());
-            //mapContent();
         }
     }
-    /*public void x(){
-        final User user3=new User();
-        databaseReference.child(keyUser).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        //initialize LocationManger
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //check condition
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            //when location service is enabled
+            //get Location
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    //initialize Location
+                    Location location = task.getResult();
+                    //check condition
+                    if (location != null){
+                        lang= location.getLongitude();
+                        lat= location.getLatitude();
+                        //Modify User Longitude And Latitude
+                        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");
+                        System.out.println(keyUser);
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                    User user = snapshot1.getValue(User.class);
+                                    System.out.println(user.getLastName());
+
+                                    if((user.getId()).equals(keyUser)){
+                                        user.setLangitude(lang);
+                                        user.setLantitude(lat);
+                                        String key=snapshot1.getKey();
+                                        databaseReference.child(key).setValue(user);
+                                        break;
+                                    }
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }else{
+                        //when location result is null
+                        //initialization location request
+
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(1000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+
+                        //initilize Location call back
+                        LocationCallback locationCallback = new LocationCallback(){
+                            @Override
+                            public void onLocationResult(LocationResult locationResult) {
+                                //Inisilize location
+                                Location location1 = locationResult.getLastLocation();
+
+                            }
+                        };
+
+                        //request location update
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+                    }
                 }
-                else {
-                    // user3.setId(((User)((HashMap)task.getResult().getValue()).entrySet().iterator().next()).getId());
+            });
+        }else {
+            //when location service is not innabled
+            //open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        }
 
+    }
 
-                    Log.d("firebase", task.getResult().getValue(User.class).toString());
-
-                }
-            }
-        });
-    }*/
-    /*public void setToolsList(){
-        databaseReference = firebaseDatabase.getReference(toolPath);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    //toolList.add(dataSnapshot.getValue(Tool.class));
-                    tools.add(dataSnapshot.getValue(Tool.class));
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }*/
 }

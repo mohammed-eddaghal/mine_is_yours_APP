@@ -25,4 +25,5 @@
         android:icon="@drawable/twotone_person_black_24"
         android:title="@string/bottom_autre"
         app:showAsAction="ifRoom" />
+
 </menu>

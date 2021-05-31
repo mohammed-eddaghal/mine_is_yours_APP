@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ensias.mine_is_yoursapp.fragments.AcceuilFragment;
 import com.ensias.mine_is_yoursapp.fragments.AjouterOutilFragment;
 import com.ensias.mine_is_yoursapp.fragments.BoiteMessagerieFragment;
+import com.ensias.mine_is_yoursapp.fragments.OtherUserProfileFragment;
 import com.ensias.mine_is_yoursapp.fragments.ProfileFragment;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,10 +24,20 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private BoiteMessagerieFragment boiteMessagerieFragment;
     private ProfileFragment profileFragment;
-
+    private AcceuilFragment acceuilFragment;
     private AjouterOutilFragment ajouterOutilFragment;
+    //Test
+    //private OtherUserProfileFragment otherUserProfileFragment;
 
     BottomNavigationView bottomNavigationView;
+
+    public AcceuilFragment getAcceuilFragment() {
+        return acceuilFragment;
+    }
+
+    public void setAcceuilFragment(AcceuilFragment acceuilFragment) {
+        this.acceuilFragment = acceuilFragment;
+    }
 
     public BoiteMessagerieFragment getBoiteMessagerieFragment() {
         return boiteMessagerieFragment;
@@ -65,10 +77,14 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_menu_principale);
         boiteMessagerieFragment = new BoiteMessagerieFragment();
         profileFragment  = new ProfileFragment();
         ajouterOutilFragment = new AjouterOutilFragment();
+        acceuilFragment = new AcceuilFragment();
+        //TEST
+        //otherUserProfileFragment = new OtherUserProfileFragment("MefeVkXLNKeIqwPqN4p8vpMIt9G3");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, profileFragment).commit();
 
@@ -91,12 +107,13 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
     private Boolean updateMainFragment(Integer integer){
         Fragment selectedFragment = null;
         switch (integer) {
+
+
             case R.id.profile:
                 selectedFragment = profileFragment;
                 break;
             case R.id.acceuil:
-                //selectedFragment = new AcceuilFragment();
-                selectedFragment = profileFragment;
+                selectedFragment = acceuilFragment;
                 break;
             case R.id.boite_messagerie:
                 selectedFragment = boiteMessagerieFragment;
