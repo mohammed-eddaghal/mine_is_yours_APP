@@ -36,6 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -138,11 +139,7 @@ public class UpdateProfileFragment extends Fragment {
 
                 } else {
                     mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getId());
-/*
-                    final ProgressDialog pd = new ProgressDialog(getContext());
-                    pd.setMessage("Sauvegarde en cours ! ");
-                    pd.show();
-*/
+
                     imageUpload(ImageUri);
                     user.setImage(imageUrl);
 
@@ -194,18 +191,30 @@ public class UpdateProfileFragment extends Fragment {
     }
 
     private void imageUpload(Uri uri){
+        final ProgressDialog pd = new ProgressDialog(getContext());
+        pd.setTitle("Uploading image...");
+        pd.show();
+
         final StorageReference fileReference = FirebaseStorage.getInstance("gs://mineisyours-68d08.appspot.com/")
                 .getReference().child("usersprofile/"+System.currentTimeMillis()+"."+getFileExtension(uri));
 
         fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                pd.dismiss();
                 imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
                 Toast.makeText(getContext() , e.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progressPercent = (100.00 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                pd.setMessage("Sauvegarde en cours ! ");
             }
         });
     }
