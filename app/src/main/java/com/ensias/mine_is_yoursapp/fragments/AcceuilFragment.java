@@ -339,8 +339,9 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
             //open location setting
             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
-        System.out.println("Lang="+lang+"-"+user.getLangitude());
-        System.out.println("Lat="+lat+"-"+user.getLantitude());
+        System.out.println("Lang=" + lang + "-" + user.getLangitude());
+        System.out.println("Lat=" + lat + "-" + user.getLantitude());
+
     }
 
    /* public void getUser(@NonNull DataSnapshot snapshot) throws InterruptedException {
