@@ -1,8 +1,17 @@
 package com.ensias.mine_is_yoursapp;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +20,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.ensias.mine_is_yoursapp.Control.ForgotPassword;
 import com.ensias.mine_is_yoursapp.Control.SessionManager;
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    Double lang,lat;
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +77,26 @@ public class LoginActivity extends AppCompatActivity {
             password.setText(userLogin.get(SessionManager.KEY_SESSION_PASSWORD));
         }
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(LoginActivity.this);
 
+
+        if((ActivityCompat.checkSelfPermission(LoginActivity.this
+                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                && (ActivityCompat.checkSelfPermission(LoginActivity.this
+                , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+            // if both permissions garanted => call methode
+            getCurrentLocation();
+
+
+        }else{
+            //when permission is not garanted
+            //request permission
+
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+            },100);
+        }
         ClickLogin();
 
 
@@ -199,6 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 mAuth.createUserWithEmailAndPassword(reg_email.getText().toString().trim(),reg_password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
@@ -207,9 +248,9 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
                             FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
                             String id = userFirebase.getUid();
-                            User user = new User(id,2d,2d,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
+                            User user = new User(id,lang,lat,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
                             reference.child("users").push().setValue(user);
-                            startActivity(new Intent(getApplicationContext(),MenuPrincipaleActivity.class));
+                            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
                             sessionManager.createUserSession(user,reg_password.getText().toString().trim());
                         }else{
@@ -219,13 +260,61 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
-
         dialog.show();
         //startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
     }
 
     public void callForgotPassword(View view){
         startActivity(new Intent(getApplicationContext(), ForgotPassword.class));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        System.out.println("Hello World From Get Current Location");
+        //initialize LocationManger
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        //check condition
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            //when location service is enabled
+            //get Location
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    //initialize Location
+                    Location location = task.getResult();
+                    //check condition
+                    if (location != null) {
+                        System.out.println("Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+                        lang = location.getLongitude();
+                        lat = location.getLatitude();
+                        System.out.println("****Lang="+lang);
+                        System.out.println("****Lat="+lat);
+                    } else {
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(1000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+                        //initilize Location call back
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void onLocationResult(LocationResult locationResult) {
+                                //Inisilize location
+                                Location location1 = locationResult.getLastLocation();
+                            }
+                        };
+                        //request location update
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                    }
+                }
+            });
+        } else {
+            //when location service is not innabled
+            //open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        }
     }
 
 }
