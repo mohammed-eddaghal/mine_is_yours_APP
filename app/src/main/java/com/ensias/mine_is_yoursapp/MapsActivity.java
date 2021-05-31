@@ -1,8 +1,10 @@
 package com.ensias.mine_is_yoursapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.ensias.mine_is_yoursapp.model.User;
@@ -37,8 +40,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +96,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         user = new User();
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
-        getCurrentLocation();
+        //check permission
+        if(ActivityCompat.checkSelfPermission(MapsActivity.this
+                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(MapsActivity.this
+                , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
+            // if both permissions garanted => call methode
+            getCurrentLocation();
+
+
+        }else{
+            //when permission is not garanted
+            //request permission
+
+            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+            },100);
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -105,10 +128,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editsearch.setOnQueryTextListener(this);
 
 
-
+/*
         lang = getIntent().getDoubleExtra("langitud",1);
         lat = getIntent().getDoubleExtra("latitude",1);
-
+*/
         new LoadData().execute();
 
 
@@ -126,12 +149,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void mapContent(){
         if(user.getLastName()!=null){
             Log.d("tagTestxx","xxx ||| "+user.getLastName()+"/ "+user.getLantitude()+"/ "+user.getLangitude());
-            lang = user.getLangitude();
-            lat = user.getLantitude();
+            //lang = user.getLangitude();
+            //lat = user.getLantitude();
         }else{
             Log.d("tagTestxx","xxx |||");
-            lang = getIntent().getDoubleExtra("langitud",1);
-            lat = getIntent().getDoubleExtra("latitude",1);
+            //lang = getIntent().getDoubleExtra("langitud",1);
+            //lat = getIntent().getDoubleExtra("latitude",1);
         }
 
         // Add a marker in Sydney and move the camera
@@ -256,6 +279,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // below line is used to get reference for our database.
             databaseReference = firebaseDatabase.getReference(userPath);
             Log.d("test","log test 0");
+
         }
 
         @Override
@@ -341,7 +365,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Location location = task.getResult();
                     //check condition
                     if (location != null){
+                        lang= location.getLongitude();
+                        lat= location.getLatitude();
+                        //Modify User Longitude And Latitude
+                        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");
+                        System.out.println(keyUser);
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                    User user = snapshot1.getValue(User.class);
+                                    System.out.println(user.getLastName());
 
+                                    if((user.getId()).equals(keyUser)){
+                                        user.setLangitude(lang);
+                                        user.setLantitude(lat);
+                                        String key=snapshot1.getKey();
+                                        databaseReference.child(key).setValue(user);
+                                        break;
+                                    }
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }else{
                         //when location result is null
                         //initialization location request
