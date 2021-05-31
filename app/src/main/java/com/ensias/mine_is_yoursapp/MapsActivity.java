@@ -40,10 +40,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker marker;
 
     private GoogleMap mMap;
-    String userPath="users", toolPath="types";
+    String userPath="users", toolPath="outils";
     final static FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
     final static String keyUser = userFirebase.getUid();
-
+    //final static String keyUser ="-MauxlClc85WBd8lWfQX";
     double lang,lat;
 
     String searchQuery;
@@ -109,8 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             lat = user.getLantitude();
         }else{
             Log.d("tagTestxx","xxx |||");
-            lang = getIntent().getDoubleExtra("langitud",1);
-            lat = getIntent().getDoubleExtra("latitude",1);
+            lat =33.9712;
+            lang =-6.8184;
         }
 
         // Add a marker in Sydney and move the camera
@@ -126,7 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 13));
 
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -134,6 +134,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        try {
+            FireBaseTraitement.getListTool(query,toolPath,firebaseDatabase,databaseReference);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         searchQuery=query;
         setItemsList();
         for (Marker marker:markers){
@@ -215,7 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void getUser(@NonNull DataSnapshot snapshot) throws InterruptedException {
         //User userx = FireBaseTraitement.findUserByID(keyUser,snapshot,MapsActivity.this);
 
-        User userx= FireBaseTraitement.getUserByID(keyUser,databaseReference);
+        User userx= FireBaseTraitement.getUserByID(keyUser,userPath,firebaseDatabase,databaseReference);
         Log.d("tagTest","firebase traitment"+userx.getLastName()+"/ "+userx.getLantitude()+"/ "+userx.getLangitude());
 
         user.setId(userx.getId());
@@ -233,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPreExecute() {
             firebaseDatabase = FirebaseDatabase.getInstance();
             // below line is used to get reference for our database.
-            databaseReference = firebaseDatabase.getReference(userPath);
+            //databaseReference = firebaseDatabase.getReference(userPath);
             Log.d("test","log test 0");
         }
 
@@ -243,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // instance of our FIrebase database.
 
             try {
-                user.cloneUser(FireBaseTraitement.getUserByID(keyUser,databaseReference));
+                user.cloneUser(FireBaseTraitement.getUserByID(keyUser,userPath,firebaseDatabase,databaseReference));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
