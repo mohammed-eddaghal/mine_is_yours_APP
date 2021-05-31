@@ -41,6 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private DatabaseReference mDatabase;
+    private ValueEventListener listener;
 
     CircleImageView myImage ;
     TextView nom_user, username_profile, phone_profile, email_profile, add_profile;
@@ -52,6 +53,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(listener != null)
+            mDatabase.removeEventListener(listener);
+
+
     }
 
     @Override
@@ -73,17 +84,9 @@ public class ProfileFragment extends Fragment {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getUid());
+        listener = new ValueEventListener() {
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
 
-/*
-        SessionManager sessionManager = new SessionManager(getContext(),SessionManager.SESSION_REMEMBERME);
-        if(sessionManager.checkRememberMe()){
-            HashMap<String,String> userLogin = sessionManager.getRememberMeSessionDetails();
-            email_profile.setText(userLogin.get(SessionManager.KEY_SESSION_EMAIL));
-        }
-*/
-            @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myUser = dataSnapshot.getValue(User.class) ;
 
@@ -107,7 +110,8 @@ public class ProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        mDatabase.addValueEventListener(listener);
 
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override

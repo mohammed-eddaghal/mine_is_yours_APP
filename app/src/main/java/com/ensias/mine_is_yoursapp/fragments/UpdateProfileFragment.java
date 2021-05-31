@@ -3,6 +3,7 @@ package com.ensias.mine_is_yoursapp.fragments;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
@@ -64,6 +65,12 @@ public class UpdateProfileFragment extends Fragment {
 
     public UpdateProfileFragment(User user) {
         this.user = user ;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("Update","Attached");
     }
 
     @Override
