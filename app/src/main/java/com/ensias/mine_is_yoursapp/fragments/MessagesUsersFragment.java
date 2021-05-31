@@ -117,7 +117,7 @@ public class MessagesUsersFragment extends Fragment {
                 }else{
                     Glide.with(MessagesUsersFragment.this).load(user.getImage()).into(profile_image);
                 }
-                readMessages(userFirebase.getUid(),user.getId(),user.getImage());
+
             }
 
             @Override
@@ -125,37 +125,35 @@ public class MessagesUsersFragment extends Fragment {
 
             }
         });
-
+        readMessages(userFirebase.getUid(),user.getId(),user.getImage());
+        messageAdapter = new MessageAdapter(getContext() , messagesList,user.getImage());
+        recyclerView.setAdapter(messageAdapter);
 
         return view;
     }
     private void sendMessage(Message message){
-         DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference();
+         DatabaseReference reference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                 .getReference();
          reference.child("messages").push().setValue(message);
     }
     private  void readMessages(final String myid , final String userId , final String imageurl){
         messagesList = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("messages");
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                .getReference("messages");
         databaseReference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                messagesList.clear();
-                for ( DataSnapshot snapshot : dataSnapshot.getChildren()){
+                //messagesList.clear();
+                for ( DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message message = snapshot.getValue(Message.class);
-                    if ( message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
-                            message.getIdTo().equals(userId) && message.getIdFrom().equals(myid)  ){
-                        messagesList.add(message);
+                    if (message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
+                            message.getIdTo().equals(userId) && message.getIdFrom().equals(myid)) {
+                        messageAdapter.addItem(message);
                     }
                 }
-                messageAdapter = new MessageAdapter(getContext() , messagesList,imageurl);
-                recyclerView.setAdapter(messageAdapter);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }

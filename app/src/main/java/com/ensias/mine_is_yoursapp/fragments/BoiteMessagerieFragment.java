@@ -98,7 +98,8 @@ public class BoiteMessagerieFragment extends Fragment {
 
     private void readUsers() {
         userList = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                .getReference("users");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
 

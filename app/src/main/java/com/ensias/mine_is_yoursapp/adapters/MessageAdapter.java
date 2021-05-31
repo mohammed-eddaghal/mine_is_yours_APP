@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.fragments.MessagesUsersFragment;
 import com.ensias.mine_is_yoursapp.model.Message;
+import com.ensias.mine_is_yoursapp.model.SliderItem;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +37,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.listMessage = listMessage;
         this.imageurl=imageur;
     }
+    public void deleteItem(int position) {
+        this.listMessage.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(Message message) {
+        this.listMessage.add(message);
+        notifyDataSetChanged();
+    }
+    public void renewItems(List<Message> listMessage) {
+        this.listMessage = listMessage;
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override

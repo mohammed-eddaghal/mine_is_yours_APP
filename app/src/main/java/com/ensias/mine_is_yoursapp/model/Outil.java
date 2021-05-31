@@ -10,6 +10,8 @@ public class Outil {
     private String type;
     private String etat = "available";
     private String titre;
+    private String description="";
+    private ArrayList<String> uris=new ArrayList<>();
 
     public String getIdOwner() {
         return idOwner;
@@ -35,8 +37,7 @@ public class Outil {
         this.etat = etat;
     }
 
-    private String description="";
-    private ArrayList<String> uris;
+
 
     public Outil(String id,String idOwner,String type ,String titre, String description, ArrayList<String> uris) {
         this.idOwner=idOwner;

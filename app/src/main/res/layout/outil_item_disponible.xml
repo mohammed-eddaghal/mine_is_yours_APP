@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    card_view:cardBackgroundColor="#90EE90"
+    card_view:cardCornerRadius="8dp"
+    card_view:contentPadding="10dp"
+    android:foreground="?selectableItemBackground"
+    android:clickable="true">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/image_outil"
+            />
+
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="280dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+
+                <TextView
+                    android:textColor="@color/black"
+                    android:id="@+id/titre_outil"
+                    android:textStyle="bold"
+                    android:text="Outil"
+                    android:textSize="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="disponible"
+                    android:textColor="@color/colorAccentDark"
+                    android:textSize="16dp"
+
+                    android:textStyle="italic"
+                    />
+
+
+            <TextView
+                android:textColor="@color/black"
+                android:id="@+id/description_outil"
+                android:text="Outil de garage tres bon etat ,essayer de me concater et on parle et je test si ca depaser"
+                android:textSize="16dp"
+                android:layout_width="269dp"
+                android:layout_height="45dp"
+                android:maxLines="2"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
