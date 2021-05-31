@@ -107,6 +107,11 @@ public class MessagesUsersFragment extends Fragment {
         btn_send = view.findViewById(R.id.btn_send);
         text_send = view.findViewById(R.id.text_send);
 
+        toolbar.setOnClickListener(e->{
+            OtherUserProfileFragment otherUserProfileFragment = new OtherUserProfileFragment(user.getId());
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout,otherUserProfileFragment).commit();
+        });
+
         btn_send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
