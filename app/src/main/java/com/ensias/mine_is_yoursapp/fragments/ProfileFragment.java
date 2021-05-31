@@ -93,13 +93,14 @@ public class ProfileFragment extends Fragment {
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
-/*
+                Log.e("Image",myUser.getImage());
                 if ( myUser.getImage().equals("default")){
-                    myImage.setImageResource(R.mipmap.ic_launcher);
+                    Glide.with(getContext()).load(R.drawable.no_image).into(myImage);
+                    //myImage.setImageResource(R.drawable.no_image);
                 }else{
-                    Glide.with(ProfileFragment.this).load(myUser.getImage()).into(myImage);
+                    Glide.with(getContext()).load(myUser.getImage()).into(myImage);
                 }
- */
+
             }
 
             @Override

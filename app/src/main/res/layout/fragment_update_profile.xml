@@ -20,7 +20,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/icon_profile"/>
+            android:src="@drawable/no_image"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/editPhoto"
@@ -53,23 +53,23 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:background="@color/background_light"
+        android:backgroundTint="@color/white"
         android:orientation="vertical"
-        android:background="@color/black"
-        android:backgroundTint="@color/white">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_profile"/>
+                android:src="@drawable/ic_profile" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,10 +77,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextBlackTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/username_title"
-                    style="@style/TextBlackTitle"/>
+                    android:text="@string/username_title" />
 
                 <EditText
                     android:id="@+id/firstname_profile"
@@ -89,7 +89,7 @@
                     android:hint="@string/Username"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    app:backgroundTint="#000"/>
+                    app:backgroundTint="#000" />
 
                 <EditText
                     android:id="@+id/lastname_profile"
@@ -98,7 +98,7 @@
                     android:hint="@string/Username"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    app:backgroundTint="#000"/>
+                    app:backgroundTint="#000" />
 
             </LinearLayout>
 
@@ -107,15 +107,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_phone"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_phone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,20 +123,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextBlackTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/phone_title"
-                    style="@style/TextBlackTitle"/>
+                    android:text="@string/phone_title" />
 
                 <EditText
                     android:id="@+id/phone_profile"
+                    style="@style/Widget.AppCompat.EditText"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/phone"
-                    android:textColor="@color/black"
                     android:inputType="phone"
-                    style="@style/Widget.AppCompat.EditText"
-                    app:backgroundTint="#000"/>
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000" />
 
             </LinearLayout>
 
@@ -145,15 +145,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_email"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_email" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -161,10 +161,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextBlackTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/email_title"
-                    style="@style/TextBlackTitle"/>
+                    android:text="@string/email_title" />
 
                 <EditText
                     android:id="@+id/email_profile"
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/Email"
                     android:textColor="@color/black"
-                    app:backgroundTint="#000"/>
+                    app:backgroundTint="#000" />
 
             </LinearLayout>
 
@@ -181,15 +181,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_address"/>
+                android:padding="4dp"
+                android:src="@drawable/ic_address" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -197,10 +197,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextBlackTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/address_title"
-                    style="@style/TextBlackTitle"/>
+                    android:text="@string/address_title" />
 
                 <EditText
                     android:id="@+id/add_profile"
@@ -208,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/address"
                     android:textColor="@color/black"
-                    app:backgroundTint="#000"/>
+                    app:backgroundTint="#000" />
 
             </LinearLayout>
 
@@ -217,27 +217,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
-            android:layout_marginTop="20dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/annule_profile"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
-                android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/Annuler"
-                android:background="@drawable/bg_button_annuler"/>
+                android:background="@drawable/bg_button_annuler"
+                android:padding="4dp"
+                android:text="@string/Annuler" />
 
             <Button
                 android:id="@+id/update_profile"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
-                android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/Modifier"
-                android:background="@drawable/bg_button_rounded"/>
+                android:background="@drawable/bg_button_rounded"
+                android:padding="4dp"
+                android:text="@string/Modifier" />
 
         </LinearLayout>
 

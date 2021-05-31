@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.adapters.SliderAdapter;
 import com.ensias.mine_is_yoursapp.model.SliderItem;
@@ -49,7 +51,7 @@ public class UpdateProfileFragment extends Fragment {
     int PICK_IMAGE_MULTIPLE = 1;
     private DatabaseReference mDatabase;
     private StorageReference storageReference;
-    public Uri ImageUri;
+    public Uri ImageUri = null;
     String imageUrl ;
 
     EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
@@ -75,6 +77,8 @@ public class UpdateProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_profile, container, false);
 
+
+
         myImage = view.findViewById(R.id.photo);
         nom_user = view.findViewById(R.id.nom_user);
 
@@ -88,7 +92,10 @@ public class UpdateProfileFragment extends Fragment {
         annule_profile = view.findViewById(R.id.annule_profile);
         photo = view.findViewById(R.id.editPhoto);
 
-        //nom_user.setText(user.getFirstName());
+        imageUrl = user.getImage();
+        if ( !user.getImage().equals("default"))
+            Glide.with(getContext()).load(user.getImage()).into(myImage);
+
 
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
@@ -138,20 +145,10 @@ public class UpdateProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else {
-                    mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getId());
+
 
                     imageUpload(ImageUri);
-                    user.setImage(imageUrl);
 
-                    user.setFirstName(firstname_profile.getText().toString());
-                    user.setLastName(lastname_profile.getText().toString());
-                    user.setPhone(phone_profile.getText().toString());
-                    user.setEmail(email_profile.getText().toString());
-                    user.setAddress(add_profile.getText().toString());
-
-                    mDatabase.setValue(user);
-                    ProfileFragment fragment = new  ProfileFragment() ;
-                    getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
                 }
             }
         });
@@ -191,31 +188,81 @@ public class UpdateProfileFragment extends Fragment {
     }
 
     private void imageUpload(Uri uri){
-        final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setTitle("Uploading image...");
-        pd.show();
+        mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                .getReference("users").child(user.getId());
 
-        final StorageReference fileReference = FirebaseStorage.getInstance("gs://mineisyours-68d08.appspot.com/")
-                .getReference().child("usersprofile/"+System.currentTimeMillis()+"."+getFileExtension(uri));
+        if (ImageUri !=null && !ImageUri.toString().equals(user.getImage()) ){
 
-        fileReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                pd.dismiss();
-                imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                Toast.makeText(getContext() , e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double progressPercent = (100.00 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                pd.setMessage("Sauvegarde en cours ! ");
-            }
-        });
+
+            final ProgressDialog pd = new ProgressDialog(getContext());
+            pd.setTitle("Uploading image...");
+            pd.show();
+
+            final StorageReference fileReference = FirebaseStorage.getInstance("gs://mineisyours-68d08.appspot.com/")
+                    .getReference().child("usersprofile/"+System.currentTimeMillis()+"."+getFileExtension(uri));
+            ///////////////////////////////////////:
+
+
+            UploadTask uploadTask = fileReference.putFile(uri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task ) throws  Exception   {
+                    if ( !task.isSuccessful())
+                        throw task.getException();
+                    return fileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if ( task.isSuccessful()){
+                        pd.dismiss();
+                        Uri downloadUri = task.getResult();
+                        imageUrl =downloadUri.toString();
+
+                        user.setImage(imageUrl);
+
+                        user.setFirstName(firstname_profile.getText().toString());
+                        user.setLastName(lastname_profile.getText().toString());
+                        user.setPhone(phone_profile.getText().toString());
+                        user.setEmail(email_profile.getText().toString());
+                        user.setAddress(add_profile.getText().toString());
+
+                        mDatabase.setValue(user);
+
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.activity_main_frame_layout,((MenuPrincipaleActivity) getActivity()).getProfileFragment())
+                                .commit();
+
+
+                    }else{
+                        Toast.makeText(getContext(), "Failed" , Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext() , e.getMessage() , Toast.LENGTH_SHORT).show();
+                }
+            });
+            ///////////////////////////////////////////
+
+        }else{
+
+            user.setFirstName(firstname_profile.getText().toString());
+            user.setLastName(lastname_profile.getText().toString());
+            user.setPhone(phone_profile.getText().toString());
+            user.setEmail(email_profile.getText().toString());
+            user.setAddress(add_profile.getText().toString());
+
+            mDatabase.setValue(user);
+            ProfileFragment fragment = new  ProfileFragment() ;
+            getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+
+        }
+
+
+
+
     }
 }
