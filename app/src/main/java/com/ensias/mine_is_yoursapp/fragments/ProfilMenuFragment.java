@@ -41,7 +41,7 @@ public class ProfilMenuFragment extends Fragment {
 
     LinearLayout linearLayout1;
     LinearLayout linearLayout2;
-
+    LinearLayout linearLayout3;
     Button deconnexion;
 
 
@@ -71,6 +71,7 @@ public class ProfilMenuFragment extends Fragment {
         username = view.findViewById(R.id.nom_complet);
         linearLayout1 = view.findViewById(R.id.btn_profil);
         linearLayout2 = view.findViewById(R.id.btn_outils);
+        linearLayout3 = view.findViewById(R.id.search);
         deconnexion = view.findViewById(R.id.deconnexion);
 
 
@@ -86,6 +87,11 @@ public class ProfilMenuFragment extends Fragment {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.activity_main_frame_layout, new MesOutilsFragment(firebaseUser.getUid())).commit();
+        });
+        linearLayout3.setOnClickListener(e->{
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.activity_main_frame_layout, new chercherUsersFragment()).commit();
         });
         deconnexion.setOnClickListener(e->{
             FirebaseAuth.getInstance().signOut();

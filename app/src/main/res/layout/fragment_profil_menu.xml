@@ -77,6 +77,30 @@
                    android:background="@android:color/transparent"
                    android:layout_height="wrap_content"/>
            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:id="@+id/search">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/ic_search_users"
+                    android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:text="Chercher des personnes"
+                    android:focusable="false"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:textAllCaps="false"
+                    android:background="@android:color/transparent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
             <TextView
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="30dp"

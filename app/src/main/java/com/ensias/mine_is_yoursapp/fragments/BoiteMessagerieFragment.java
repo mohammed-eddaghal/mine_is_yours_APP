@@ -125,7 +125,7 @@ public class BoiteMessagerieFragment extends Fragment {
                         }
                     }
                 }
-                userAdapter = new UserAdapter((MenuPrincipaleActivity) getActivity(),getContext() , userList);
+                userAdapter = new UserAdapter((MenuPrincipaleActivity) getActivity(),getContext() , userList,UserAdapter.SOURCE_MESSAGERIE);
                 recyclerView.setAdapter(userAdapter);
             }
             @Override
