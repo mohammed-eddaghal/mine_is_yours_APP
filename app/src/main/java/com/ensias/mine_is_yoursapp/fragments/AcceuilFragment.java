@@ -293,9 +293,9 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                     }
                     else {
                         Toast.makeText(getActivity(),marker.getTitle(),Toast.LENGTH_LONG).show();
-                        /*getActivity().getSupportFragmentManager()
+                        getActivity().getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.activity_main_frame_layout, new OutilDetailsFragment(task.getResult().getValue(Outil.class) , this).commit();*/
+                                .replace(R.id.activity_main_frame_layout, new OutilDetailsFragment(task.getResult().getValue(Outil.class) , AcceuilFragment.this)).commit();
                     }
                 }
             });
