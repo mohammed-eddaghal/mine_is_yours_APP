@@ -302,6 +302,7 @@ public class UpdateProfileFragment extends Fragment {
             user.setLangitude(lang);//Double.parseDouble(langitude.getText().toString() ));
             user.setLantitude(lat);//Double.parseDouble(lantitude.getText().toString() ));
 
+            System.out.println(user.toString());
             mDatabase.setValue(user);
 
             ProfileFragment fragment = new  ProfileFragment() ;
