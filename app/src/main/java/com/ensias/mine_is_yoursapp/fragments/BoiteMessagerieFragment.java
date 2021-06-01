@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.adapters.UserAdapter;
 import com.ensias.mine_is_yoursapp.model.Message;
@@ -124,7 +125,7 @@ public class BoiteMessagerieFragment extends Fragment {
                         }
                     }
                 }
-                userAdapter = new UserAdapter(getContext() , userList);
+                userAdapter = new UserAdapter((MenuPrincipaleActivity) getActivity(),getContext() , userList);
                 recyclerView.setAdapter(userAdapter);
             }
             @Override

@@ -1,5 +1,6 @@
 package com.ensias.mine_is_yoursapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
+import com.ensias.mine_is_yoursapp.fragments.OtherUserProfileFragment;
+import com.ensias.mine_is_yoursapp.fragments.OutilDetailsFragment;
 import com.ensias.mine_is_yoursapp.model.Message;
 import com.ensias.mine_is_yoursapp.model.Outil;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,13 +30,18 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
     public static final int OUTIL_NOT_AVAILABLE     =    1;
 
     private Context         context;
+    private MenuPrincipaleActivity activity;
     private List<Outil>     listOutils;
+
+    OtherUserProfileFragment fragment;
 
     FirebaseUser firebaseUser;
 
-    public OutilAdapter(Context context , List<Outil> listOutils){
+    public OutilAdapter(MenuPrincipaleActivity activity,Context context , List<Outil> listOutils, OtherUserProfileFragment fragment){
+        this.activity = activity;
         this.context =context;
         this.listOutils = listOutils;
+        this.fragment = fragment;
     }
     public void deleteItem(int position) {
         this.listOutils.remove(position);
@@ -62,6 +73,7 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Outil outil = listOutils.get(position);
         holder.titre_outil.setText(outil.getTitre());
         holder.description_outil.setText(outil.getDescription());
@@ -70,6 +82,11 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
         }else{
             Glide.with(context).load(outil.getUris().get(0)).into(holder.image_outil);
         }
+        holder.cardView.setOnClickListener(e->{
+            OutilDetailsFragment outilDetailsFragment = new OutilDetailsFragment(outil,fragment);
+
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, outilDetailsFragment).commit();
+        });
 
     }
 
@@ -79,12 +96,14 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends  RecyclerView.ViewHolder{
+        public CardView cardView;
         public TextView titre_outil;
         public TextView description_outil;
         public ImageView image_outil;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView    = itemView.findViewById(R.id.cardView);
             titre_outil = itemView.findViewById(R.id.titre_outil);
             description_outil = itemView.findViewById(R.id.description_outil);
             image_outil = itemView.findViewById(R.id.image_outil);

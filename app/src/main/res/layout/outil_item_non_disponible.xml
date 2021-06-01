@@ -11,6 +11,7 @@
     card_view:cardCornerRadius="8dp"
     card_view:contentPadding="10dp"
     android:foreground="?selectableItemBackground"
+    android:id="@+id/cardView"
     android:clickable="true">
 
     <LinearLayout

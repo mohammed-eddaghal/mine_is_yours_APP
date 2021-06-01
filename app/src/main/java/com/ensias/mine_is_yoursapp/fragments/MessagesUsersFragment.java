@@ -44,6 +44,9 @@ public class MessagesUsersFragment extends Fragment {
     private FirebaseUser userFirebase;
     private DatabaseReference databaseReference;
     private User user;
+    ValueEventListener listener;
+    private DatabaseReference databaseReference2;
+    ValueEventListener listener2;
 
     CircleImageView profile_image;
     TextView username;
@@ -55,14 +58,25 @@ public class MessagesUsersFragment extends Fragment {
     RecyclerView recyclerView;
 
 
+    private Fragment fragmentPrecedant;
 
-    public MessagesUsersFragment(User user) {
+
+    public MessagesUsersFragment(Fragment fragment,User user) {
+        this.fragmentPrecedant = fragment;
         this.user = user;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if ( databaseReference != null && listener != null)
+                databaseReference.removeEventListener(listener);
 
     }
 
@@ -77,8 +91,8 @@ public class MessagesUsersFragment extends Fragment {
         toolbar.setNavigationOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                BoiteMessagerieFragment fragment = ((MenuPrincipaleActivity)getActivity()).getBoiteMessagerieFragment();
-                 getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragmentPrecedant).commit();
             }
         });
 
@@ -93,6 +107,11 @@ public class MessagesUsersFragment extends Fragment {
         btn_send = view.findViewById(R.id.btn_send);
         text_send = view.findViewById(R.id.text_send);
 
+        toolbar.setOnClickListener(e->{
+            OtherUserProfileFragment otherUserProfileFragment = new OtherUserProfileFragment(user.getId());
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout,otherUserProfileFragment).commit();
+        });
+
         btn_send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -106,8 +125,9 @@ public class MessagesUsersFragment extends Fragment {
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getId());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+                .getReference("users").child(user.getId());
+        listener =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -124,7 +144,8 @@ public class MessagesUsersFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        databaseReference.addValueEventListener(listener);
         readMessages(userFirebase.getUid(),user.getId(),user.getImage());
         messageAdapter = new MessageAdapter(getContext() , messagesList,user.getImage());
         recyclerView.setAdapter(messageAdapter);
@@ -138,23 +159,26 @@ public class MessagesUsersFragment extends Fragment {
     }
     private  void readMessages(final String myid , final String userId , final String imageurl){
         messagesList = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
+        databaseReference2 = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("messages");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        listener2 =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //messagesList.clear();
                 for ( DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
                     Message message = snapshot.getValue(Message.class);
                     if (message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
                             message.getIdTo().equals(userId) && message.getIdFrom().equals(myid)) {
                         messageAdapter.addItem(message);
+                        recyclerView.scrollToPosition(messageAdapter.getItemCount()- 1);
                     }
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        };
+        databaseReference2.addValueEventListener(listener2);
     }
 }

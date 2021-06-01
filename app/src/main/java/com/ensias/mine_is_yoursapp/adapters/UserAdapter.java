@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.fragments.MessagesUsersFragment;
 import com.ensias.mine_is_yoursapp.model.User;
@@ -21,10 +22,12 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
+    private MenuPrincipaleActivity menuPrincipaleActivity;
     private List<User> listUsers;
 
-    public UserAdapter(Context context , List<User> listUsers){
+    public UserAdapter(MenuPrincipaleActivity activity,Context context , List<User> listUsers){
         this.context =context;
+        this.menuPrincipaleActivity = activity;
         this.listUsers = listUsers;
     }
 
@@ -48,7 +51,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 // new Fragment
-                MessagesUsersFragment messageFragment =new MessagesUsersFragment(user);
+                MessagesUsersFragment messageFragment =new MessagesUsersFragment(menuPrincipaleActivity.getBoiteMessagerieFragment(),user);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, messageFragment).commit();
             }
         });
