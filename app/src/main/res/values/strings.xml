@@ -27,6 +27,7 @@
     <string name="langitude">Langitude</string>
     <string name="Modifier">Modifier</string>
     <string name="Annuler">Annuler</string>
+    <string name="deconnecter">Déconnecter</string>
 
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_messagerie">Messagerie</string>

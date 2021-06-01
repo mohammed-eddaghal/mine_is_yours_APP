@@ -60,7 +60,7 @@ public class UpdateProfileFragment extends Fragment {
     public Uri ImageUri = null;
     String imageUrl ;
 
-    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile, lantitude, langitude;
+    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
     TextView nom_user ;
     Button annule_profile, update_profile ;
     FloatingActionButton photo;
@@ -96,8 +96,6 @@ public class UpdateProfileFragment extends Fragment {
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
         add_profile = view.findViewById(R.id.add_profile);
-        langitude = view.findViewById(R.id.langitude);
-        lantitude = view.findViewById(R.id.lantitude);
 
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
@@ -114,8 +112,6 @@ public class UpdateProfileFragment extends Fragment {
         phone_profile.setText(user.getPhone());
         email_profile.setText(user.getEmail());
         add_profile.setText(user.getAddress());
-        lantitude.setText(user.getLantitude().toString());
-        langitude.setText(user.getLangitude().toString());
 
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,12 +152,6 @@ public class UpdateProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else if (add_profile.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
-
-                } else if (langitude.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
-
-                } else if (lantitude.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else {
@@ -241,8 +231,6 @@ public class UpdateProfileFragment extends Fragment {
                         user.setPhone(phone_profile.getText().toString());
                         user.setEmail(email_profile.getText().toString());
                         user.setAddress(add_profile.getText().toString());
-                        user.setLangitude(Double.parseDouble(langitude.getText().toString() ));
-                        user.setLantitude(Double.parseDouble(lantitude.getText().toString() ));
 
                         mDatabase.setValue(user);
 
@@ -268,8 +256,6 @@ public class UpdateProfileFragment extends Fragment {
             user.setPhone(phone_profile.getText().toString());
             user.setEmail(email_profile.getText().toString());
             user.setAddress(add_profile.getText().toString());
-            user.setLangitude(Double.parseDouble(langitude.getText().toString() ));
-            user.setLantitude(Double.parseDouble(lantitude.getText().toString() ));
 
             mDatabase.setValue(user);
 
