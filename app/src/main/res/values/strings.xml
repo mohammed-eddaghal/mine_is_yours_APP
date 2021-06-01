@@ -16,16 +16,17 @@
 
     <string name="nom_complet">Nom user</string>
     <string name="username_title">Username</string>
-    <string name="back_to_home">Back to\nHome</string>
+    <string name="edit_profile">Edit \nProfile</string>
     <string name="phone_title">Phone</string>
     <string name="phone">+000 00 000 000</string>
     <string name="email_title">Email</string>
     <string name="address_title">Address</string>
     <string name="address">Rabat</string>
     <string name="Edit">Edit</string>
+    <string name="lantitude">Lantitude</string>
+    <string name="langitude">Langitude</string>
     <string name="Modifier">Modifier</string>
     <string name="Annuler">Annuler</string>
-
 
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_messagerie">Messagerie</string>

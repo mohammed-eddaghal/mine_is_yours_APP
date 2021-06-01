@@ -44,9 +44,8 @@ public class ProfileFragment extends Fragment {
     private ValueEventListener listener;
 
     CircleImageView myImage ;
-    TextView nom_user, username_profile, phone_profile, email_profile, add_profile;
-    FrameLayout back ;
-    Button edit_profile ;
+    TextView nom_user, username_profile, phone_profile, email_profile, add_profile, langitude, lantitude;
+    FrameLayout edit_profile ;
     FirebaseUser user;
     User myUser ;
 
@@ -61,8 +60,6 @@ public class ProfileFragment extends Fragment {
         super.onDestroyView();
         if(listener != null)
             mDatabase.removeEventListener(listener);
-
-
     }
 
     @Override
@@ -78,9 +75,10 @@ public class ProfileFragment extends Fragment {
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
         add_profile = view.findViewById(R.id.add_profile);
+        langitude = view.findViewById(R.id.langitude);
+        lantitude = view.findViewById(R.id.lantitude);
 
         edit_profile = view.findViewById(R.id.edit_profile);
-        back = view.findViewById(R.id.back_profile);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getUid());
@@ -90,20 +88,22 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myUser = dataSnapshot.getValue(User.class) ;
 
-                //nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
+                nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
 
                 username_profile.setText(myUser.getFirstName()+" " + myUser.getLastName());
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
+                langitude.setText(myUser.getLangitude().toString());
+                lantitude.setText(myUser.getLantitude().toString());
                 Log.e("Image",myUser.getImage());
+
                 if ( myUser.getImage().equals("default")){
                     Glide.with(getContext()).load(R.drawable.no_image).into(myImage);
                     //myImage.setImageResource(R.drawable.no_image);
                 }else{
                     Glide.with(getContext()).load(myUser.getImage()).into(myImage);
                 }
-
             }
 
             @Override

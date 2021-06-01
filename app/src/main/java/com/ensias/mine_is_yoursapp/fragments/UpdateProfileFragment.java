@@ -55,7 +55,7 @@ public class UpdateProfileFragment extends Fragment {
     public Uri ImageUri = null;
     String imageUrl ;
 
-    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
+    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile, lantitude, langitude;
     TextView nom_user ;
     Button annule_profile, update_profile ;
     FloatingActionButton photo;
@@ -76,15 +76,12 @@ public class UpdateProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_profile, container, false);
-
-
 
         myImage = view.findViewById(R.id.photo);
         nom_user = view.findViewById(R.id.nom_user);
@@ -94,6 +91,8 @@ public class UpdateProfileFragment extends Fragment {
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
         add_profile = view.findViewById(R.id.add_profile);
+        langitude = view.findViewById(R.id.langitude);
+        lantitude = view.findViewById(R.id.lantitude);
 
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
@@ -103,12 +102,13 @@ public class UpdateProfileFragment extends Fragment {
         if ( !user.getImage().equals("default"))
             Glide.with(getContext()).load(user.getImage()).into(myImage);
 
-
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
         phone_profile.setText(user.getPhone());
         email_profile.setText(user.getEmail());
         add_profile.setText(user.getAddress());
+        lantitude.setText(user.getLantitude().toString());
+        langitude.setText(user.getLangitude().toString());
 
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +149,12 @@ public class UpdateProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else if (add_profile.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
+
+                } else if (langitude.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
+
+                } else if (lantitude.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else {
@@ -200,15 +206,12 @@ public class UpdateProfileFragment extends Fragment {
 
         if (ImageUri !=null && !ImageUri.toString().equals(user.getImage()) ){
 
-
             final ProgressDialog pd = new ProgressDialog(getContext());
             pd.setTitle("Uploading image...");
             pd.show();
 
             final StorageReference fileReference = FirebaseStorage.getInstance("gs://mineisyours-68d08.appspot.com/")
                     .getReference().child("usersprofile/"+System.currentTimeMillis()+"."+getFileExtension(uri));
-            ///////////////////////////////////////:
-
 
             UploadTask uploadTask = fileReference.putFile(uri);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -233,6 +236,8 @@ public class UpdateProfileFragment extends Fragment {
                         user.setPhone(phone_profile.getText().toString());
                         user.setEmail(email_profile.getText().toString());
                         user.setAddress(add_profile.getText().toString());
+                        user.setLangitude(Double.parseDouble(langitude.getText().toString() ));
+                        user.setLantitude(Double.parseDouble(lantitude.getText().toString() ));
 
                         mDatabase.setValue(user);
 
@@ -240,8 +245,6 @@ public class UpdateProfileFragment extends Fragment {
                                 .beginTransaction()
                                 .replace(R.id.activity_main_frame_layout,((MenuPrincipaleActivity) getActivity()).getProfileFragment())
                                 .commit();
-
-
                     }else{
                         Toast.makeText(getContext(), "Failed" , Toast.LENGTH_SHORT).show();
                     }
@@ -252,7 +255,6 @@ public class UpdateProfileFragment extends Fragment {
                     Toast.makeText(getContext() , e.getMessage() , Toast.LENGTH_SHORT).show();
                 }
             });
-            ///////////////////////////////////////////
 
         }else{
 
@@ -265,11 +267,6 @@ public class UpdateProfileFragment extends Fragment {
             mDatabase.setValue(user);
             ProfileFragment fragment = new  ProfileFragment() ;
             getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
-
         }
-
-
-
-
     }
 }

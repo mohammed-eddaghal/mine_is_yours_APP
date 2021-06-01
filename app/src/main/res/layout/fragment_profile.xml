@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.35"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:background="@drawable/diego_ph">
@@ -23,6 +23,7 @@
             android:src="@drawable/icon_profile"/>
 
         <TextView
+            android:id="@+id/nom_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nom_complet"
@@ -32,7 +33,8 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/back_profile"
+        android:id="@+id/edit_profile"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="-25dp"
@@ -53,7 +55,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/back_to_home"
+            android:text="@string/edit_profile"
             android:layout_gravity="center"
             android:gravity="center"
             style="@style/TextButton" />
@@ -66,7 +68,7 @@
         android:layout_weight="0.6"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -212,17 +214,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_horizontal"
             android:layout_marginTop="14dp">
 
-            <Button
-                android:id="@+id/edit_profile"
-                android:layout_width="150dp"
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/Edit"
-                android:background="@drawable/bg_button_rounded"/>
+                android:src="@drawable/ic_baseline_map_24"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/langitude"
+                    style="@style/TextBlackTitle"/>
+
+                <TextView
+                    android:id="@+id/langitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address"
+                    style="@style/TextDescription"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/lantitude"
+                    style="@style/TextBlackTitle"/>
+
+                <TextView
+                    android:id="@+id/lantitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address"
+                    style="@style/TextDescription"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

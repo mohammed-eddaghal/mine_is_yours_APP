@@ -29,15 +29,12 @@
             android:backgroundTint="@color/colorPrimary1"
             android:background="@color/colorPrimaryDark1"
             android:layout_marginLeft="40dp"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:srcCompat="@android:drawable/ic_dialog_email" />
-            android:layout_marginTop="-50dp"
+            android:layout_marginTop="-40dp"
             android:clickable="true"
             android:src="@drawable/ic_baseline_edit_24"
             app:layout_anchor="@id/cardView"
             app:layout_anchorGravity="bottom|right|end"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
-
 
         <TextView
             android:id="@+id/nom_user"
@@ -49,10 +46,13 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_weight="0.6">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/background_light"
         android:backgroundTint="@color/white"
         android:orientation="vertical"
@@ -218,6 +218,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_baseline_map_24" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextBlackTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lantitude" />
+
+                <EditText
+                    android:id="@+id/lantitude"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lantitude"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000" />
+
+                <TextView
+                    style="@style/TextBlackTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/langitude" />
+
+                <EditText
+                    android:id="@+id/langitude"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/langitude"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    app:backgroundTint="#000" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -242,5 +295,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>
