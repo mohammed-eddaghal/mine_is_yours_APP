@@ -1,13 +1,10 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -15,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,11 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.ensias.mine_is_yoursapp.Control.SessionManager;
-import com.ensias.mine_is_yoursapp.LoginActivity;
-
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -81,12 +72,20 @@ public class ProfileFragment extends Fragment {
         edit_profile = view.findViewById(R.id.edit_profile);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getUid());
+        mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");//.child(user.getUid());
+        String key = user.getUid();
         listener = new ValueEventListener() {
 
 
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                myUser = dataSnapshot.getValue(User.class) ;
+                for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
+                    User user = snapshot1.getValue(User.class);
+                    System.out.println(user.getLastName());
+                    if((user.getId()).equals(key)) {
+                        myUser = snapshot1.getValue(User.class);
+                        break;
+                    }
+                }
 
                 nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
 

@@ -376,7 +376,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                                     User user = snapshot1.getValue(User.class);
                                     System.out.println(user.getLastName());
-
                                     if((user.getId()).equals(keyUser)){
                                         user.setLangitude(lang);
                                         user.setLantitude(lat);
