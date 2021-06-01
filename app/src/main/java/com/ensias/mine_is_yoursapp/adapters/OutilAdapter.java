@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
+import com.ensias.mine_is_yoursapp.fragments.MesOutilsFragment;
+import com.ensias.mine_is_yoursapp.fragments.MonOutilDetailsFragment;
 import com.ensias.mine_is_yoursapp.fragments.OtherUserProfileFragment;
 import com.ensias.mine_is_yoursapp.fragments.OutilDetailsFragment;
+import com.ensias.mine_is_yoursapp.fragments.ProfilMenuFragment;
 import com.ensias.mine_is_yoursapp.model.Message;
 import com.ensias.mine_is_yoursapp.model.Outil;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,11 +36,16 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
     private MenuPrincipaleActivity activity;
     private List<Outil>     listOutils;
 
-    OtherUserProfileFragment fragment;
+    Fragment fragment;
 
-    FirebaseUser firebaseUser;
 
     public OutilAdapter(MenuPrincipaleActivity activity,Context context , List<Outil> listOutils, OtherUserProfileFragment fragment){
+        this.activity = activity;
+        this.context =context;
+        this.listOutils = listOutils;
+        this.fragment = fragment;
+    }
+    public OutilAdapter(MenuPrincipaleActivity activity,Context context , List<Outil> listOutils, MesOutilsFragment fragment){
         this.activity = activity;
         this.context =context;
         this.listOutils = listOutils;
@@ -82,9 +90,16 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
             Glide.with(context).load(outil.getUris().get(0)).into(holder.image_outil);
         }
         holder.cardView.setOnClickListener(e->{
-            OutilDetailsFragment outilDetailsFragment = new OutilDetailsFragment(outil,fragment);
+            if ( fragment instanceof OtherUserProfileFragment ){
+                OutilDetailsFragment outilDetailsFragment = new OutilDetailsFragment(outil,fragment);
 
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, outilDetailsFragment).commit();
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.activity_main_frame_layout, outilDetailsFragment).commit();
+            }else{
+                MonOutilDetailsFragment monOutilDetailsFragment = new MonOutilDetailsFragment(outil,fragment);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.activity_main_frame_layout, monOutilDetailsFragment).commit();
+            }
         });
 
     }
@@ -111,7 +126,6 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if ( listOutils.get(position).getEtat().equals("available")){
             return OUTIL_AVAILABLE;
         }else{

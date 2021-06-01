@@ -199,12 +199,11 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
             public void onDataChange(DataSnapshot snapshot) {
                 int i=0;
                 for (DataSnapshot contact : snapshot.getChildren()) {
-                    Log.d("test",""+(++i));
                     Outil c = contact.getValue(Outil.class);
                     //Log.d("contact:: ", c.toString());
                     if( (c.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (c.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
                     {
-
+                        i++;
                         Log.d("contact HiHiHi:: ", "zzzzzz "+c.toString());
 
                         User userHandel= new User();
@@ -231,15 +230,13 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                         //drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_RED,c);
 
 
-                        Toast.makeText(getActivity(),""+c.getId(),Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getActivity(),""+c.getId(),Toast.LENGTH_LONG).show();
                     }
                     tools.add(c);
                 }
 
-                for(Outil outil:tools){
-                    if( (outil.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (outil.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
-                        Log.d("contact HOHOHO:: ", "zzzzzz "+outil.toString());
-                }
+                if(i==0)Toast.makeText(getActivity(), query +" not found",Toast.LENGTH_LONG).show();
+
 
             }
 
@@ -260,19 +257,6 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
         return true;
     }
 
-    public void setItemsList() {
-
-        int z = 0;
-        itemList = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            double x = Math.random() / 100;
-            double y = Math.random() / 100;
-            User user = new User(key, lang + x, lat + y, null, null, null, null);
-            itemList.add(new Item(user, new Tool(tolsName[z++])));
-            if (z == 10) z = 0;
-
-        }
-    }
 
     private MarkerOptions drawMarker(LatLng point,float id,Outil item) {
         // Creating an instance of MarkerOptions
@@ -295,10 +279,28 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (marker.getPosition().longitude != lang && marker.getPosition().latitude != lat) {
-            Toast.makeText(getActivity(), "latitude" + marker.getPosition().latitude + " | longitude"
-                    + marker.getPosition().longitude, Toast.LENGTH_LONG).show();
-        }
+        if (marker.getPosition().longitude != lang
+                && marker.getPosition().latitude != lat) {
+
+            DatabaseReference databaseReference = firebaseDatabase.getReference(toolPath);
+            databaseReference.child(marker.getTitle()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                //User user3=new User();
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase static", "Error getting data", task.getException());
+                    }
+                    else {
+                        Toast.makeText(getActivity(),marker.getTitle(),Toast.LENGTH_LONG).show();
+                        /*getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.activity_main_frame_layout, new OutilDetailsFragment(task.getResult().getValue(Outil.class) , this).commit();*/
+                    }
+                }
+            });
+
+           }
         return false;
     }
     @RequiresApi(api = Build.VERSION_CODES.M)

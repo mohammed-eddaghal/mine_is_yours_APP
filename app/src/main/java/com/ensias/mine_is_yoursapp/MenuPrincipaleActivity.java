@@ -10,6 +10,7 @@ import com.ensias.mine_is_yoursapp.fragments.AcceuilFragment;
 import com.ensias.mine_is_yoursapp.fragments.AjouterOutilFragment;
 import com.ensias.mine_is_yoursapp.fragments.BoiteMessagerieFragment;
 import com.ensias.mine_is_yoursapp.fragments.OtherUserProfileFragment;
+import com.ensias.mine_is_yoursapp.fragments.ProfilMenuFragment;
 import com.ensias.mine_is_yoursapp.fragments.ProfileFragment;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +24,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     private BoiteMessagerieFragment boiteMessagerieFragment;
-    private ProfileFragment profileFragment;
+    private ProfilMenuFragment profileFragment;
     private AcceuilFragment acceuilFragment;
     private AjouterOutilFragment ajouterOutilFragment;
     //Test
@@ -43,11 +44,11 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
         return boiteMessagerieFragment;
     }
 
-    public ProfileFragment getProfileFragment() {
+    public ProfilMenuFragment getProfileFragment() {
         return profileFragment;
     }
 
-    public void setProfileFragment(ProfileFragment profileFragment) {
+    public void setProfileFragment(ProfilMenuFragment profileFragment) {
         this.profileFragment = profileFragment;
     }
 
@@ -80,7 +81,7 @@ public class MenuPrincipaleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_menu_principale);
         boiteMessagerieFragment = new BoiteMessagerieFragment();
-        profileFragment  = new ProfileFragment();
+        profileFragment  = new ProfilMenuFragment();
         ajouterOutilFragment = new AjouterOutilFragment();
         acceuilFragment = new AcceuilFragment();
         //TEST
