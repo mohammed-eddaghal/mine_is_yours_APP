@@ -1,11 +1,9 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -157,35 +154,36 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void mapContent() {
-        //check permission
-        if (ActivityCompat.checkSelfPermission(getActivity()
-                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity()
-                , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // if both permissions garanted => call methode
-        } else {
-            //when permission is not garanted
-            //request permission
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-            }, 100);
-        }
-        getCurrentLocation();
         System.out.println("Hello World From Map");
-        LatLng mark = new LatLng(lat, lang);
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");//.child(user.getUid());
+        ValueEventListener listener = new ValueEventListener() {
 
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
+                    User user = snapshot1.getValue(User.class);
+                    System.out.println(user.getLastName());
+                    if((user.getId()).equals(keyUser)) {
+                        LatLng mark = new LatLng(user.getLantitude(), user.getLangitude());
+                        mMap.addMarker(new MarkerOptions().position(mark).title("markerTest"));
 
-        mMap.addMarker(new MarkerOptions().position(mark).title("markerTest"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 11));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 11));
+                        mMap.getUiSettings().setCompassEnabled(true);
+                        mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference.addValueEventListener(listener);
     }
 
     @Override
