@@ -4,6 +4,6 @@
 
     <corners android:radius="32dp"/>
     <gradient android:startColor="@color/colorAccentDark"
-        android:endColor="@color/background_light"/>
+        android:endColor="@color/input_register_hint"/>
 
 </shape>
