@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.Control.SessionManager;
 import com.ensias.mine_is_yoursapp.LoginActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;

@@ -46,50 +46,7 @@ public class FireBaseTraitement {
         return user3;
     }
 
-    public static void geTools(String query,String path, FirebaseDatabase firebaseDatabase) throws InterruptedException {
-        DatabaseReference databaseReference = firebaseDatabase.getReference(path);
-        final List<Outil> tools= new ArrayList<>();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                int i=0;
-                for (DataSnapshot contact : snapshot.getChildren()) {
-                    Log.d("test",""+(++i));
-                    Outil c = contact.getValue(Outil.class);
-                    Log.d("contact:: ", c.toString());
-                    tools.add(c);
-            }
 
-                for(Outil outil:tools){
-                    Log.d("contact HOHOHO:: ", "zzzzzz "+outil.toString());
-                }
-        }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-        Thread.sleep(500);
-        Log.d("contact HOHOHO:: ", "sssssss "+tools.size());
-        for(Outil outil:tools){
-            Log.d("contact HOHOHO:: ", "sssssss "+outil.toString());
-        }
-
-        /*databaseReference.addChildEventListener(new ValueEventListener(){
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot contact : snapshot.getChildren()) {
-                    Outil c = contact.getValue(Outil.class);
-                    Log.d("contact:: ", c.getIdOwner() + " " + c.getDescription());
-                    tools.add(c);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });*/
-    }
 
 
 
