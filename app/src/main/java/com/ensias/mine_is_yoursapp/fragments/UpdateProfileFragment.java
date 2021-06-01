@@ -36,8 +36,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -102,6 +107,8 @@ public class UpdateProfileFragment extends Fragment {
         if ( !user.getImage().equals("default"))
             Glide.with(getContext()).load(user.getImage()).into(myImage);
 
+        nom_user.setText(user.getFirstName()+" " + user.getLastName());
+
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
         phone_profile.setText(user.getPhone());
@@ -158,10 +165,7 @@ public class UpdateProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
                 } else {
-
-
                     imageUpload(ImageUri);
-
                 }
             }
         });
@@ -201,6 +205,7 @@ public class UpdateProfileFragment extends Fragment {
     }
 
     private void imageUpload(Uri uri){
+
         mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("users").child(user.getId());
 
@@ -263,8 +268,11 @@ public class UpdateProfileFragment extends Fragment {
             user.setPhone(phone_profile.getText().toString());
             user.setEmail(email_profile.getText().toString());
             user.setAddress(add_profile.getText().toString());
+            user.setLangitude(Double.parseDouble(langitude.getText().toString() ));
+            user.setLantitude(Double.parseDouble(lantitude.getText().toString() ));
 
             mDatabase.setValue(user);
+
             ProfileFragment fragment = new  ProfileFragment() ;
             getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
         }
