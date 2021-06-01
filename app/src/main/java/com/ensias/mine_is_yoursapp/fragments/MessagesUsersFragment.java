@@ -166,7 +166,6 @@ public class MessagesUsersFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //messagesList.clear();
                 for ( DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                     Message message = snapshot.getValue(Message.class);
                     if (message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
                             message.getIdTo().equals(userId) && message.getIdFrom().equals(myid)) {

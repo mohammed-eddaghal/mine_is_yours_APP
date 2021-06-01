@@ -53,7 +53,6 @@ public class OtherUserProfileFragment extends Fragment {
     ArrayList<Outil> listOutils;
     OutilAdapter outilAdapter;
 
-
     public OtherUserProfileFragment(String idUser) {
        this.idUser=idUser;
     }

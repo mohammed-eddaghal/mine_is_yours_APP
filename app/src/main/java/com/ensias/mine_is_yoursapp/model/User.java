@@ -94,6 +94,21 @@ public class User {
         this.address = address;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", langitude=" + langitude +
+                ", lantitude=" + lantitude +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", image='" + image + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
     public void cloneUser(User user){
         setId(user.getId());
         setLantitude(user.getLantitude());

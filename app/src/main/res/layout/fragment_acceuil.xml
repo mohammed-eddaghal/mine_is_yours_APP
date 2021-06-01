@@ -27,4 +27,3 @@
         android:queryHint="Search Here"
         android:background="@color/white"/>
 </RelativeLayout>
-
