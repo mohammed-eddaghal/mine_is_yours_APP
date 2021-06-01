@@ -1,7 +1,5 @@
 package com.ensias.mine_is_yoursapp.model;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class Outil {
@@ -10,7 +8,7 @@ public class Outil {
     private String id;
     private String idOwner;
     private String titre;
-    private String description="";
+    private String type;
     private ArrayList<String> uris=new ArrayList<>();
 
     public String getIdOwner() {
