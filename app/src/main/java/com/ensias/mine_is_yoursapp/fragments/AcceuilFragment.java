@@ -1,8 +1,11 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
 
-import android.app.Activity;
-
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -117,7 +119,6 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         /*mapFragment = (SupportMapFragment)( getActivity().getSupportFragmentManager())
                 .findFragmentById(R.id.map);
-
         mapFragment.getMapAsync(this);*/
         SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
         FragmentTransaction fragmentTransaction =
@@ -133,10 +134,8 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
         editsearch.setOnQueryTextListener(this);
 
 /*
-
         lang = getActivity().getIntent().getDoubleExtra("langitud",1);
         lat = getActivity().getIntent().getDoubleExtra("latitude",1);
-
 */
         AcceuilFragment.LoadData loadData = new AcceuilFragment.LoadData();
         loadData.execute();
@@ -155,35 +154,39 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void mapContent() {
-        //check permission
-        if (ActivityCompat.checkSelfPermission(getActivity()
-                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity()
-                , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // if both permissions garanted => call methode
-        } else {
-            //when permission is not garanted
-            //request permission
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-            }, 100);
-        }
-        getCurrentLocation();
         System.out.println("Hello World From Map");
-        LatLng mark = new LatLng(lat, lang);
+        databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");//.child(user.getUid());
+        ValueEventListener listener = new ValueEventListener() {
 
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
+                    User user = snapshot1.getValue(User.class);
+                    System.out.println(user.getLastName());
+                    if((user.getId()).equals(keyUser)) {
+                        LatLng mark = new LatLng(user.getLantitude(), user.getLangitude());
+                        System.out.println("Latitude"+user.getLantitude());
+                        System.out.println("Langitude"+user.getLangitude());
+                        System.out.println("Last Name"+user.getLastName());
+                        mMap.addMarker(new MarkerOptions().position(mark).title("markerTest"));
 
-        mMap.addMarker(new MarkerOptions().position(mark).title("markerTest"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 11));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark, 11));
+                        mMap.getUiSettings().setCompassEnabled(true);
+                        mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference.addValueEventListener(listener);
     }
 
     @Override
@@ -202,30 +205,30 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                     if( (c.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (c.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
                     {
 
-                            Log.d("contact HiHiHi:: ", "zzzzzz "+c.toString());
+                        Log.d("contact HiHiHi:: ", "zzzzzz "+c.toString());
 
-                            User userHandel= new User();
-                            DatabaseReference databaseReference = firebaseDatabase.getReference(userPath);
-                            databaseReference.child(c.getIdOwner()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        User userHandel= new User();
+                        DatabaseReference databaseReference = firebaseDatabase.getReference(userPath);
+                        databaseReference.child(c.getIdOwner()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-                                    if (!task.isSuccessful()) {
-                                        Log.e("firebase static", "Error getting data", task.getException());
-                                    }
-                                    else {
-                                        userHandel.cloneUser(task.getResult().getValue(User.class));
-                                        //user3.setLastName(task.getResult().getValue(User.class).getLastName());
-                                        Log.d("firebase test 00", userHandel.toString());
-                                        Log.d("firebase test 11", task.getResult().getValue(User.class).toString());
-                                        drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_CYAN,c);
-                                    }
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase static", "Error getting data", task.getException());
                                 }
-                            });
+                                else {
+                                    userHandel.cloneUser(task.getResult().getValue(User.class));
+                                    //user3.setLastName(task.getResult().getValue(User.class).getLastName());
+                                    Log.d("firebase test 00", userHandel.toString());
+                                    Log.d("firebase test 11", task.getResult().getValue(User.class).toString());
+                                    drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_CYAN,c);
+                                }
+                            }
+                        });
 
-                            //userHandel.cloneUser(FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) );
-                            //Log.d("contact KhKhKh:: ", FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) .toString());
-                            //drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_RED,c);
+                        //userHandel.cloneUser(FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) );
+                        //Log.d("contact KhKhKh:: ", FireBaseTraitement.getUserByID(c.getIdOwner(),userPath,firebaseDatabase) .toString());
+                        //drawMarker(new LatLng(userHandel.getLantitude(),userHandel.getLangitude()),BitmapDescriptorFactory.HUE_RED,c);
 
 
                         Toast.makeText(getActivity(),""+c.getId(),Toast.LENGTH_LONG).show();
@@ -235,7 +238,7 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
                 for(Outil outil:tools){
                     if( (outil.getTitre().toLowerCase()).compareTo(query.toLowerCase())==0 && (outil.getEtat().toLowerCase()).compareTo(("available").toLowerCase())==0)
-                    Log.d("contact HOHOHO:: ", "zzzzzz "+outil.toString());
+                        Log.d("contact HOHOHO:: ", "zzzzzz "+outil.toString());
                 }
 
             }
@@ -382,16 +385,13 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
 
    /* public void getUser(@NonNull DataSnapshot snapshot) throws InterruptedException {
         //User userx = FireBaseTraitement.findUserByID(keyUser,snapshot,MapsActivity.this);
-
         User userx= FireBaseTraitement.getUserByID(keyUser,databaseReference);
         Log.d("tagTest","firebase traitment"+userx.getLastName()+"/ "+userx.getLantitude()+"/ "+userx.getLangitude());
-
         user.setId(userx.getId());
         user.setLastName(userx.getLastName());
         user.setLangitude(userx.getLangitude());
         user.setLantitude(userx.getLantitude());
         Log.d("tagTestDDD","firebase traitment"+user.getLastName()+"/ "+user.getLantitude()+"/ "+user.getLantitude());
-
         mapContent();
     }*/
 
