@@ -164,6 +164,9 @@ public class AcceuilFragment extends Fragment  implements OnMapReadyCallback, Se
                     System.out.println(user.getLastName());
                     if((user.getId()).equals(keyUser)) {
                         LatLng mark = new LatLng(user.getLantitude(), user.getLangitude());
+                        System.out.println("Latitude"+user.getLantitude());
+                        System.out.println("Langitude"+user.getLangitude());
+                        System.out.println("Last Name"+user.getLastName());
                         mMap.addMarker(new MarkerOptions().position(mark).title("markerTest"));
 
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(mark));
