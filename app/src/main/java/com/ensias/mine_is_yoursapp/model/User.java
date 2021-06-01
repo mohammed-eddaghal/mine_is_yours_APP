@@ -2,12 +2,12 @@ package com.ensias.mine_is_yoursapp.model;
 
 public class User {
     private String id;
-    private Double langitude;
-    private Double lantitude;
+    private Double langitude=-7d;
+    private Double lantitude=33d;
     private String firstName;
     private String lastName;
     private String email;
-    private String image;
+    private String image="default";
     private String phone;
     private String address;
 
