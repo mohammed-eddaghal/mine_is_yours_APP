@@ -1,17 +1,21 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.LoginActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +39,8 @@ public class ProfileFragment extends Fragment {
     private ValueEventListener listener;
 
     CircleImageView myImage ;
-    TextView nom_user, username_profile, phone_profile, email_profile, add_profile, langitude, lantitude;
+    TextView nom_user, username_profile, phone_profile, email_profile, add_profile;
+    Button deconnecte ;
     FrameLayout edit_profile ;
     FirebaseUser user;
     User myUser ;
@@ -66,26 +71,19 @@ public class ProfileFragment extends Fragment {
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
         add_profile = view.findViewById(R.id.add_profile);
-        langitude = view.findViewById(R.id.langitude);
-        lantitude = view.findViewById(R.id.lantitude);
 
         edit_profile = view.findViewById(R.id.edit_profile);
 
+        deconnecte = view.findViewById(R.id.deconnecte);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users");//.child(user.getUid());
-        String key = user.getUid();
+        mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/").getReference("users").child(user.getUid());
+
         listener = new ValueEventListener() {
 
-
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
-                    User user = snapshot1.getValue(User.class);
-                    System.out.println(user.getLastName());
-                    if((user.getId()).equals(key)) {
-                        myUser = snapshot1.getValue(User.class);
-                        break;
-                    }
-                }
+
+                myUser = dataSnapshot.getValue(User.class);
 
                 nom_user.setText(myUser.getFirstName()+" " + myUser.getLastName());
 
@@ -93,10 +91,8 @@ public class ProfileFragment extends Fragment {
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
-                if ( myUser.getLangitude() != null )
-                    langitude.setText(myUser.getLangitude().toString());
-                if ( myUser.getLantitude() != null )
-                    lantitude.setText(myUser.getLantitude().toString());
+                langitude.setText(myUser.getLangitude().toString());
+                lantitude.setText(myUser.getLantitude().toString());
                 Log.e("Image",myUser.getImage());
 
                 if ( myUser.getImage().equals("default")){
@@ -120,6 +116,14 @@ public class ProfileFragment extends Fragment {
                // Toast.makeText(getActivity(),"Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
                 UpdateProfileFragment fragment = new  UpdateProfileFragment(myUser) ;
                 getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+            }
+        });
+
+        deconnecte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Au revoir", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
 

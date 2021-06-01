@@ -1,18 +1,28 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +35,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.LoginActivity;
 import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.adapters.SliderAdapter;
 import com.ensias.mine_is_yoursapp.model.SliderItem;
 import com.ensias.mine_is_yoursapp.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -55,11 +76,14 @@ public class UpdateProfileFragment extends Fragment {
     public Uri ImageUri = null;
     String imageUrl ;
 
-    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile, lantitude, langitude;
+    EditText firstname_profile, lastname_profile, phone_profile, email_profile, add_profile;
     TextView nom_user ;
     Button annule_profile, update_profile ;
     FloatingActionButton photo;
     CircleImageView myImage ;
+
+    Double lang,lat;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     User user ;
 
@@ -78,6 +102,7 @@ public class UpdateProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,8 +116,6 @@ public class UpdateProfileFragment extends Fragment {
         phone_profile = view.findViewById(R.id.phone_profile);
         email_profile = view.findViewById(R.id.email_profile);
         add_profile = view.findViewById(R.id.add_profile);
-        langitude = view.findViewById(R.id.langitude);
-        lantitude = view.findViewById(R.id.lantitude);
 
         update_profile = view.findViewById(R.id.update_profile);
         annule_profile = view.findViewById(R.id.annule_profile);
@@ -102,13 +125,34 @@ public class UpdateProfileFragment extends Fragment {
         if ( !user.getImage().equals("default"))
             Glide.with(getContext()).load(user.getImage()).into(myImage);
 
+        nom_user.setText(user.getFirstName()+" " + user.getLastName());
+
         firstname_profile.setText(user.getFirstName());
         lastname_profile.setText(user.getLastName());
         phone_profile.setText(user.getPhone());
         email_profile.setText(user.getEmail());
         add_profile.setText(user.getAddress());
-        lantitude.setText(user.getLantitude().toString());
-        langitude.setText(user.getLangitude().toString());
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+
+        if((ActivityCompat.checkSelfPermission(getActivity()
+                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                && (ActivityCompat.checkSelfPermission(getActivity()
+                , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+            // if both permissions garanted => call methode
+            getCurrentLocation();
+
+
+        }else{
+            //when permission is not garanted
+            //request permission
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+            },100);
+        }
 
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,17 +195,8 @@ public class UpdateProfileFragment extends Fragment {
                 } else if (add_profile.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
 
-                } else if (langitude.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
-
-                } else if (lantitude.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(getActivity(), "Et hop ! un message à l'écran :D", Toast.LENGTH_LONG).show();
-
                 } else {
-
-
                     imageUpload(ImageUri);
-
                 }
             }
         });
@@ -201,6 +236,7 @@ public class UpdateProfileFragment extends Fragment {
     }
 
     private void imageUpload(Uri uri){
+
         mDatabase = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
                 .getReference("users").child(user.getId());
 
@@ -236,9 +272,9 @@ public class UpdateProfileFragment extends Fragment {
                         user.setPhone(phone_profile.getText().toString());
                         user.setEmail(email_profile.getText().toString());
                         user.setAddress(add_profile.getText().toString());
-                        user.setLangitude(Double.parseDouble(langitude.getText().toString() ));
-                        user.setLantitude(Double.parseDouble(lantitude.getText().toString() ));
 
+                        user.setLangitude(lang);//Double.parseDouble(langitude.getText().toString() ));
+                        user.setLantitude(lat);//Double.parseDouble(lantitude.getText().toString() ));
                         mDatabase.setValue(user);
 
                         getFragmentManager()
@@ -263,10 +299,64 @@ public class UpdateProfileFragment extends Fragment {
             user.setPhone(phone_profile.getText().toString());
             user.setEmail(email_profile.getText().toString());
             user.setAddress(add_profile.getText().toString());
+            user.setLangitude(lang);//Double.parseDouble(langitude.getText().toString() ));
+            user.setLantitude(lat);//Double.parseDouble(lantitude.getText().toString() ));
 
+            System.out.println(user.toString());
             mDatabase.setValue(user);
+
             ProfileFragment fragment = new  ProfileFragment() ;
             getFragmentManager().beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        System.out.println("Hello World From Get Current Location");
+        //initialize LocationManger
+        LocationManager locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //check condition
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            //when location service is enabled
+            //get Location
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    //initialize Location
+                    Location location = task.getResult();
+                    //check condition
+                    if (location != null) {
+                        System.out.println("Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+                        lang = location.getLongitude();
+                        lat = location.getLatitude();
+                        System.out.println("****Lang="+lang);
+                        System.out.println("****Lat="+lat);
+                    } else {
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(1000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+                        //initilize Location call back
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void onLocationResult(LocationResult locationResult) {
+                                //Inisilize location
+                                Location location1 = locationResult.getLastLocation();
+                            }
+                        };
+                        //request location update
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                    }
+                }
+            });
+        } else {
+            //when location service is not innabled
+            //open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        }
+    }
+
 }

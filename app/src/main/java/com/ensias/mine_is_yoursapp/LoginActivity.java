@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -249,7 +250,9 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
                             String id = userFirebase.getUid();
                             User user = new User(id,lang,lat,reg_firstName.getText().toString(),reg_lastName.getText().toString(),reg_email.getText().toString(),"default");
-                            reference.child("users").push().setValue(user);
+                            Log.e("id",id + " " + userFirebase.getUid());
+                            reference.child("users/"+id).setValue(user);
+                            //reference.child("users").push().setValue(user);
                             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             SessionManager sessionManager = new SessionManager(getApplicationContext(),SessionManager.SESSION_USERSESSION);
                             sessionManager.createUserSession(user,reg_password.getText().toString().trim());

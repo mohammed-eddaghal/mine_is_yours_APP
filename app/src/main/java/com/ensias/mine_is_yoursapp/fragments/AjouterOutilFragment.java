@@ -268,8 +268,5 @@ public class AjouterOutilFragment extends Fragment {
         //Affichage des uris ( à enlever )
         for ( Uri uri : listImagesUri)
             Log.i("Ajouter" , uri.toString());
-
-
-
     }
 }
