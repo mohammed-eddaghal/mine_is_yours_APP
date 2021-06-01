@@ -79,4 +79,6 @@
     <string name="forgot_password_msg">Nous avons juste besoin de votre adresse e-mail enregistrée pour vous envoyer des instructions de réinitialisation de mot de passe.</string>
     <string name="contacter">Contacter</string>
     <string name="chercher">Chercher</string>
+    <string name="General">Généralités</string>
+    <string name="services">Services partagées</string>
 </resources>

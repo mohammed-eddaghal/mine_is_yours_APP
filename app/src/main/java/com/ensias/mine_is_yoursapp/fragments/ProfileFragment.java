@@ -93,8 +93,10 @@ public class ProfileFragment extends Fragment {
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
-                langitude.setText(myUser.getLangitude().toString());
-                lantitude.setText(myUser.getLantitude().toString());
+                if ( myUser.getLangitude() != null )
+                    langitude.setText(myUser.getLangitude().toString());
+                if ( myUser.getLantitude() != null )
+                    lantitude.setText(myUser.getLantitude().toString());
                 Log.e("Image",myUser.getImage());
 
                 if ( myUser.getImage().equals("default")){

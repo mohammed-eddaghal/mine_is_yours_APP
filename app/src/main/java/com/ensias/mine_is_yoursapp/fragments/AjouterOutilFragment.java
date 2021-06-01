@@ -152,10 +152,13 @@ public class AjouterOutilFragment extends Fragment {
             }
             Tasks.whenAllSuccess(taskArrayList).addOnCompleteListener(task -> {
                 pd.dismiss();
+                String idOutil = String.valueOf(System.currentTimeMillis());
+                outil.setId(idOutil);
                 databaseReference = FirebaseDatabase.getInstance("https://mineisyours-68d08-default-rtdb.firebaseio.com/")
-                        .getReference("outils");
+                        .getReference("outils").child(idOutil);
                 Log.e("test",outil + " " +outil.getUris().size());
-                databaseReference.push().setValue(outil).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                databaseReference.setValue(outil).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         //renouvler un nv fragment ajouterOutilFragment

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.ProfilMenuFragment"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:background="@drawable/diego_ph"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/icon_profile" />
+
+        <TextView
+            style="@style/TextName"
+            android:id="@+id/nom_complet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="" />
+
+    </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_weight="0.6"
+
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                    style="@style/TextBlackTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/General" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginLeft="20dp"
+               android:clickable="true"
+               android:id="@+id/btn_profil">
+               <ImageView
+                   android:layout_width="35dp"
+                   android:layout_height="35dp"
+                   android:src="@drawable/ic_profil"
+                   android:layout_gravity="center_vertical"/>
+               <TextView
+                   android:layout_gravity="center_vertical"
+                   android:text="Mon profil"
+                   android:focusable="false"
+                   android:textSize="16sp"
+                   android:layout_marginLeft="30dp"
+                   android:gravity="start|center_vertical"
+                   android:textColor="@color/black"
+                   android:layout_width="match_parent"
+                   android:textAllCaps="false"
+                   android:background="@android:color/transparent"
+                   android:layout_height="wrap_content"/>
+           </LinearLayout>
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="30dp"
+                style="@style/TextBlackTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/services" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/btn_outils">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_services" />
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:text="Mes outils"
+                    android:focusable="false"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:textAllCaps="false"
+                    android:background="@android:color/transparent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="0.1"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <Button
+            android:id="@+id/deconnexion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Déconnexion"
+            android:textAllCaps="false"
+            android:background="@color/colorAccentDark"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
