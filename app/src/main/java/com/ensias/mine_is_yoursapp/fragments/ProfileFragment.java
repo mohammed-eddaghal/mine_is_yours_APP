@@ -91,9 +91,6 @@ public class ProfileFragment extends Fragment {
                 email_profile.setText(myUser.getEmail());
                 phone_profile.setText(myUser.getPhone());
                 add_profile.setText(myUser.getAddress());
-                langitude.setText(myUser.getLangitude().toString());
-                lantitude.setText(myUser.getLantitude().toString());
-                Log.e("Image",myUser.getImage());
 
                 if ( myUser.getImage().equals("default")){
                     Glide.with(getContext()).load(R.drawable.no_image).into(myImage);
@@ -122,6 +119,7 @@ public class ProfileFragment extends Fragment {
         deconnecte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getActivity(),"Au revoir", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
             }

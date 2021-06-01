@@ -1,5 +1,6 @@
 package com.ensias.mine_is_yoursapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.ensias.mine_is_yoursapp.LoginActivity;
 import com.ensias.mine_is_yoursapp.MenuPrincipaleActivity;
 import com.ensias.mine_is_yoursapp.R;
 import com.ensias.mine_is_yoursapp.model.User;
@@ -84,7 +87,11 @@ public class ProfilMenuFragment extends Fragment {
                     .beginTransaction()
                     .replace(R.id.activity_main_frame_layout, new MesOutilsFragment(firebaseUser.getUid())).commit();
         });
-
+        deconnexion.setOnClickListener(e->{
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(getActivity(),"Au revoir", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        });
 
 
         return view;
