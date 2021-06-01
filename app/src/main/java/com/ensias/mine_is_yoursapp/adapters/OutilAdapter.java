@@ -73,7 +73,6 @@ public class OutilAdapter extends RecyclerView.Adapter<OutilAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Outil outil = listOutils.get(position);
         holder.titre_outil.setText(outil.getTitre());
         holder.description_outil.setText(outil.getDescription());
