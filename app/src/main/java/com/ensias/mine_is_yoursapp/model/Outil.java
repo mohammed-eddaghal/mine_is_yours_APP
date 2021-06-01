@@ -11,6 +11,8 @@ public class Outil {
     private String idOwner;
     private String titre;
     private String description="";
+    private String type;
+    private String etat = "available";
     private ArrayList<String> uris=new ArrayList<>();
 
     public String getIdOwner() {
