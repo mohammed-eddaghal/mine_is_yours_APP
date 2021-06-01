@@ -132,9 +132,6 @@ public class UpdateProfileFragment extends Fragment {
         phone_profile.setText(user.getPhone());
         email_profile.setText(user.getEmail());
         add_profile.setText(user.getAddress());
-<<<<<<< Updated upstream
-=======
-
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -156,10 +153,6 @@ public class UpdateProfileFragment extends Fragment {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             },100);
         }
-        lantitude.setText(String.valueOf(lat));
-        langitude.setText(String.valueOf(lang));
-
->>>>>>> Stashed changes
 
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,12 +272,9 @@ public class UpdateProfileFragment extends Fragment {
                         user.setPhone(phone_profile.getText().toString());
                         user.setEmail(email_profile.getText().toString());
                         user.setAddress(add_profile.getText().toString());
-<<<<<<< Updated upstream
 
-=======
                         user.setLangitude(lang);//Double.parseDouble(langitude.getText().toString() ));
                         user.setLantitude(lat);//Double.parseDouble(lantitude.getText().toString() ));
->>>>>>> Stashed changes
                         mDatabase.setValue(user);
 
                         getFragmentManager()
@@ -309,11 +299,8 @@ public class UpdateProfileFragment extends Fragment {
             user.setPhone(phone_profile.getText().toString());
             user.setEmail(email_profile.getText().toString());
             user.setAddress(add_profile.getText().toString());
-<<<<<<< Updated upstream
-=======
             user.setLangitude(lang);//Double.parseDouble(langitude.getText().toString() ));
             user.setLantitude(lat);//Double.parseDouble(lantitude.getText().toString() ));
->>>>>>> Stashed changes
 
             mDatabase.setValue(user);
 
