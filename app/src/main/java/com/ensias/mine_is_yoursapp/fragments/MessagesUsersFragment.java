@@ -164,7 +164,7 @@ public class MessagesUsersFragment extends Fragment {
         listener2 =new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //messagesList.clear();
+                messagesList.clear();
                 for ( DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message message = snapshot.getValue(Message.class);
                     if (message.getIdTo().equals(myid) && message.getIdFrom().equals(userId) ||
